@@ -8,7 +8,6 @@ const database = require('./database');
 const {deployRoles} = require('./deploy-roles');
 const { User } = require('./model');
 const Models = require('./model');
-let hasInitializationCompleted = false;
 
 (async () => {
     initializeCommands();
@@ -16,20 +15,22 @@ let hasInitializationCompleted = false;
         Models[ele].associate(Models);
     });
     await database.dbConnection.sync({force: true});
-
     client.once('ready', async () => {
-        console.log('ready!');
         await deployRoles(client);
-        hasInitializationCompleted = true;
+        console.log('ready!');
     });
     
     client.on('interactionCreate', async interaction => {
         if (!interaction.isCommand()) return;
-        if(!hasInitializationCompleted) return interaction.reply('the bot is starting up!');
-        const user = await User.findOne({where: { discordId: interaction.user.id }});
+        let user = await User.findOne({where: { discordId: interaction.user.id }});
         if(!user){
-            await new User({discordId: interaction.user.id}).save();
+            user = await new User({discordId: interaction.user.id}).save();
         }
+
+        if(user.isBlacklisted === 'Y'){
+            return interaction.reply('You cannot use commands! You are blacklisted!');
+        }
+
         const command = client.commands.get(interaction.commandName);
     
         if (!command) return;

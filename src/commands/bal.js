@@ -6,6 +6,7 @@ module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('bal')
 		.setDescription('Replies with your fossil balance!'),
+    adminRequired: false,
 	async execute(interaction) {
         const user = await User.findOne({where: {discordId: interaction.user.id}});
 		let bank = await UserBank.findOne({where: {UserId: user.id}});

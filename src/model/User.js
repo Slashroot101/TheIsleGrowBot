@@ -16,6 +16,10 @@ User.init(
             type: DataTypes.STRING,
             unique: true,
         },
+        isBlacklisted: {
+            type: DataTypes.ENUM('Y', 'N'),
+            defaultValue: 'N',
+        }
     },
     {
         paranoid: true,

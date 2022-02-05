@@ -12,6 +12,7 @@ module.exports = {
                                 opt.setName('id')
                                     .setDescription('The ID of your steam account.')
                                     .setRequired(true)),
+    adminRequired: false,
     async execute(interaction) {
         const steamId = interaction.options.get('id').value;
         const isSteamId = /\d{17}/.test(steamId);
