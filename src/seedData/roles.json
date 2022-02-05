@@ -1,0 +1,9 @@
+{
+    "roles": [
+        {
+            "code": "registrationRole",
+            "name": "Fossil Bot Registered",
+            "color": "BLUE"
+        }
+    ]
+}

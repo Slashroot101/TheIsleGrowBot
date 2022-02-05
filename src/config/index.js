@@ -7,4 +7,7 @@ module.exports = {
     dbUsername: process.env.DB_USERNAME,
     dbPassword: process.env.DB_PASSWORD,
     dbHost: process.env.DB_HOST,
+    token: process.env.TOKEN,
+    clientId: process.env.CLIENTID,
+    guildId: process.env.GUILDID,
 };
