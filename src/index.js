@@ -6,11 +6,15 @@ const client = new Client({intents: [Intents.FLAGS.GUILDS]});
 const path = require('path');
 const database = require('./database');
 const {deployRoles} = require('./deploy-roles');
+const { User } = require('./model');
+const Models = require('./model');
 let hasInitializationCompleted = false;
 
 (async () => {
     initializeCommands();
-
+    Object.keys(Models).forEach((ele) => {
+        Models[ele].associate(Models);
+    });
     await database.dbConnection.sync({force: true});
 
     client.once('ready', async () => {
@@ -22,7 +26,10 @@ let hasInitializationCompleted = false;
     client.on('interactionCreate', async interaction => {
         if (!interaction.isCommand()) return;
         if(!hasInitializationCompleted) return interaction.reply('the bot is starting up!');
-
+        const user = await User.findOne({where: { discordId: interaction.user.id }});
+        if(!user){
+            await new User({discordId: interaction.user.id}).save();
+        }
         const command = client.commands.get(interaction.commandName);
     
         if (!command) return;
@@ -30,6 +37,7 @@ let hasInitializationCompleted = false;
         try {
             await command.execute(interaction);
         } catch (error) {
+            console.log(error)
             await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
         }
     });
