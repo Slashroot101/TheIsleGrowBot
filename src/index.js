@@ -34,6 +34,10 @@ const Models = require('./model');
         const command = client.commands.get(interaction.commandName);
     
         if (!command) return;
+        console.log(command, user.dataValues.isAdmin)
+        if(command.adminRequired && user.dataValues.isAdmin === 'N' || user.dataValues.isAdmin === null){
+            return interaction.reply('You must be an admin to use that command!');
+        }
     
         try {
             await command.execute(interaction);

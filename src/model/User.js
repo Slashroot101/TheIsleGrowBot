@@ -19,7 +19,11 @@ User.init(
         isBlacklisted: {
             type: DataTypes.ENUM('Y', 'N'),
             defaultValue: 'N',
-        }
+        },
+        isAdmin: {
+            type: DataTypes.ENUM('Y', 'N'),
+            defaultValue: 'N',
+        },
     },
     {
         paranoid: true,
