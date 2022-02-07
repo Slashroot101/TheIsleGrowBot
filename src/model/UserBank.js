@@ -1,23 +1,23 @@
 const { Sequelize, Model, DataTypes } = require('sequelize');
-const { dbConnection } = require("../database");
+const { dbConnection } = require('../database');
 
 class UserBank extends Model {
-    static associate(models){
-        models.UserBank.belongsTo(models.User)
-    }
+	static associate(models) {
+		models.UserBank.belongsTo(models.User);
+	}
 }
 
 UserBank.init(
-    {
-        balance: {
-            type: DataTypes.INTEGER,
-        },
-    }, 
-    {
-        paranoid: true,
-        sequelize: dbConnection,
-        modelName: "UserBank",
-    }
+	{
+		balance: {
+			type: DataTypes.INTEGER,
+		},
+	},
+	{
+		paranoid: true,
+		sequelize: dbConnection,
+		modelName: 'UserBank',
+	},
 );
 
 
