@@ -15,7 +15,7 @@ module.exports = {
                 .addChoice('No', 'N')
                 .setRequired(true)
             ),
-    adminRequired: false,
+    adminRequired: true,
 	async execute(interaction) {
         const isPromoted = interaction.options.get('isadmin').value;
         const userId = interaction.options.get('id').value;

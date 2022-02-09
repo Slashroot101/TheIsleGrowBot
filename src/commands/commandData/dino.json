@@ -1,0 +1,12 @@
+{
+    "SuchoAdultS": {
+        "displayName": "Suchomimus",
+        "value": "SuchoAdultS",
+        "cost": 100
+    },
+    "RexAdultS": {
+        "displayName": "T-Rex",
+        "value": "RexAdultS",
+        "cost": 100
+    }
+}

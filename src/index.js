@@ -14,7 +14,7 @@ const Models = require('./model');
     Object.keys(Models).forEach((ele) => {
         Models[ele].associate(Models);
     });
-    await database.dbConnection.sync({force: true});
+    await database.dbConnection.sync({force: false});
     client.once('ready', async () => {
         await deployRoles(client);
         console.log('ready!');
@@ -25,6 +25,7 @@ const Models = require('./model');
         let user = await User.findOne({where: { discordId: interaction.user.id }});
         if(!user){
             user = await new User({discordId: interaction.user.id}).save();
+            await new Models.UserBank({UserId: user.id, balance: 0}).save();
         }
 
         if(user.isBlacklisted === 'Y'){
@@ -34,7 +35,6 @@ const Models = require('./model');
         const command = client.commands.get(interaction.commandName);
     
         if (!command) return;
-        console.log(command, user.dataValues.isAdmin)
         if(command.adminRequired && user.dataValues.isAdmin === 'N' || user.dataValues.isAdmin === null){
             return interaction.reply('You must be an admin to use that command!');
         }
@@ -59,4 +59,3 @@ const Models = require('./model');
     
     client.login(token);
 })();
-
