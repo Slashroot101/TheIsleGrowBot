@@ -24,6 +24,10 @@ User.init(
 			type: DataTypes.ENUM('Y', 'N'),
 			defaultValue: 'N',
 		},
+		isApexApproved: {
+			type: DataTypes.ENUM('Y', 'N'),
+			defaultValue: 'N',
+		}
 	},
 	{
 		paranoid: true,

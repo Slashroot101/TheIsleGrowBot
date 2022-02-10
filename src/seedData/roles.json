@@ -1,9 +1,15 @@
 {
     "roles": [
         {
+            "code": "apexApproved",
+            "name": "Apex Approved",
+            "color": "GREEN"
+        },
+        {
             "code": "registrationRole",
             "name": "Fossil Bot Registered",
             "color": "BLUE"
         }
+
     ]
 }

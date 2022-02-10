@@ -2,11 +2,13 @@
     "SuchoAdultS": {
         "displayName": "Suchomimus",
         "value": "SuchoAdultS",
-        "cost": 100
+        "cost": 100,
+        "requiresApex": false
     },
     "RexAdultS": {
         "displayName": "T-Rex",
         "value": "RexAdultS",
-        "cost": 100
+        "cost": 100,
+        "requiresApex": true
     }
 }

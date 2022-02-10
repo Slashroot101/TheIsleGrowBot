@@ -16,7 +16,7 @@ module.exports = {
                 .addChoice('No', 'N')
                 .setRequired(true)
             ),
-    adminRequired: true,
+    adminRequired: false,
 	async execute(interaction) {
         const isBlacklisted = interaction.options.get('isblacklisted').value;
         const userId = interaction.options.get('id').value;

@@ -22,9 +22,11 @@ module.exports = {
         ),
     adminRequired: false,
 	async execute(interaction) {
-        console.log(interaction.options.get('dino'))
         const dinoId = interaction.options.get('dino').value;
         const user = await User.findOne({where: {discordId: interaction.user.id}});
+        if(user.isApexApproved === 'N' && dinoData[dinoId].requiresApex){
+            return interaction.reply('You must be apex approved to grow this dino!');
+        }
         const userBank = await UserBank.findOne({where: {UserId: user.id}});
         var cost = dinoData[dinoId].cost;
 
@@ -36,12 +38,16 @@ module.exports = {
             return interaction.reply('You need to link your steam ID first with /link!')
         }
 
+        await interaction.deferReply();
+
         exists(`${playerDatabase}/Survival/Players/${user.steamId}.json`, async (exists) => {
             if(exists){      
                 await updateDinoFile(interaction, user, userBank, dinoId, cost);
             } else {
                 await writeNewDino(interaction, user, userBank, dinoId, cost);
             }
+
+            await interaction.followUp('Your grow has been processed!');
         });
 	},
 };
