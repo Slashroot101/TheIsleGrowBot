@@ -12,6 +12,9 @@ UserBank.init(
 		balance: {
 			type: DataTypes.INTEGER,
 		},
+		apexBalance: {
+			type: DataTypes.INTEGER,
+		}
 	},
 	{
 		paranoid: true,

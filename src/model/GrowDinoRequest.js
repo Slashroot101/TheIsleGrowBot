@@ -1,5 +1,6 @@
 const { Sequelize, Model, DataTypes } = require('sequelize');
 const { dbConnection } = require('../database');
+const growStatusEnum = require('./Enum/GrowStatusEnum');
 
 class GrowDinoRequest extends Model {
 	static associate(models) {
@@ -7,18 +8,13 @@ class GrowDinoRequest extends Model {
 	}
 }
 
-exports.growStatusEnum = {
-	initialize: 'Initialize',
-	waitingOnUser: 'WaitingOnUser',
-	processing: 'Processing',
-	processed: 'Processed',
-};
+
 
 GrowDinoRequest.init(
 	{
 		growStatus: {
-			type: DataTypes.ENUM(this.growStatusEnum.initialize, this.growStatusEnum.waitingOnUser, this.growStatusEnum.processing, this.growStatusEnum.processed),
-			defaultValue: this.growStatusEnum.initialize,
+			type: DataTypes.ENUM(growStatusEnum.initialize, growStatusEnum.waitingOnUser, growStatusEnum.processing, growStatusEnum.processed, growStatusEnum.declined),
+			defaultValue: growStatusEnum.initialize,
 		},
 		cost: {
 			type: DataTypes.INTEGER,
