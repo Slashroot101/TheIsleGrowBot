@@ -11,4 +11,5 @@ module.exports = {
     clientId: process.env.CLIENTID,
     guildId: process.env.GUILDID,
     playerDatabase: process.env.PLAYERDATABASE,
+    referralAward: process.env.REFERRAL_AWARD,
 };

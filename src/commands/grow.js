@@ -7,6 +7,8 @@ const dinoData = require('./commandData/dino.json');
 const { UserBank, GrowDinoRequest } = require('../model');
 const growStatusEnum  = require('../model/Enum/GrowStatusEnum');
 const { MessageActionRow, MessageButton } = require('discord.js');
+const IslePlayerDatabase = require('../lib/IslePlayerDatabase');
+const playerDataBaseAccessor = new IslePlayerDatabase(process.env.playerDatabase);
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -23,6 +25,7 @@ module.exports = {
             }
         ),
     adminRequired: false,
+    requiresSteamLink: true,
 	async execute(interaction) {
         const dinoId = interaction.options.get('dino').value;
         const user = await User.findOne({where: {discordId: interaction.user.id}});
@@ -99,22 +102,11 @@ module.exports = {
 };
 
 async function updateDinoFile(interaction, user, userBank, dinoId, cost){
-    readFile(`${playerDatabase}/Survival/Players/${user.steamId}.json`, async (err, data) => {
-        if(err) { 
-            return interaction.followUp('An error occured during your grow!');
-        }
-
-        var json = JSON.parse(data);
-        json.CharacterClass = dinoId;
-
-        writeFile(`${playerDatabase}/Survival/Players/${user.steamId}.json`, JSON.stringify(json), async (writeErr) => {
-            if(writeErr) {
-                return interaction.followUp('An error occured saving your dino grow! Contact an admin!');
-            }
-
-            await userBank.update({where: {UserId: user.id}}, {balance: userBank.balance - cost});
-        })
-    });
+    var userSave = playerDataBaseAccessor.getPlayerSave(user.steamId);
+    var json = JSON.parse(userSave);
+    json.CharacterClass = dinoId;
+    await playerDataBaseAccessor.writePlayerSave(user.steamId, JSON.stringify(json));
+    await userBank.update({where: {UserId: user.id}}, {balance: userBank.balance - cost});
 }
 
 async function writeNewDino(interaction, user, userBank, dinoId, cost){
@@ -147,10 +139,6 @@ async function writeNewDino(interaction, user, userBank, dinoId, cost){
         "SkinPaletteVariation": "6.0"
     };
 
-    writeFile(resolve(`${playerDatabase}/Survival/Players/${user.steamId}.json`), JSON.stringify(newFile), async (newFileErr) => {
-        if(newFileErr) {
-            return interaction.followUp('An error occured saving your dino grow! Contact an admin!');
-        }
-        await userBank.update({where: {UserId: user.id}}, {balance: userBank.balance - cost});
-    });
+    await playerDataBaseAccessor.writePlayerSave(user.steamId, JSON.stringify(newFile));
+    await userBank.update({where: {UserId: user.id}}, {balance: userBank.balance - cost});
 }

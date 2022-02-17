@@ -14,7 +14,7 @@ const Models = require('./model');
     Object.keys(Models).forEach((ele) => {
         Models[ele].associate(Models);
     });
-    await database.dbConnection.sync({force: false});
+    await database.dbConnection.sync({force: true});
     client.once('ready', async () => {
         await deployRoles(client);
         console.log('ready!');
@@ -38,9 +38,13 @@ const Models = require('./model');
         if(command.adminRequired && user.dataValues.isAdmin === 'N' || user.dataValues.isAdmin === null){
             return interaction.reply('You must be an admin to use that command!');
         }
+
+        if(command.requiresSteamLink !== undefined && command.requiresSteamLink === true && !user.steamId){
+            return interaction.reply('Your steam must be linked to run this command!');
+        }
     
         try {
-            await command.execute(interaction);
+            await command.execute(interaction, client);
         } catch (error) {
             console.log(error)
             await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });

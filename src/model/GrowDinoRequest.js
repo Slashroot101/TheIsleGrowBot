@@ -8,8 +8,6 @@ class GrowDinoRequest extends Model {
 	}
 }
 
-
-
 GrowDinoRequest.init(
 	{
 		growStatus: {
