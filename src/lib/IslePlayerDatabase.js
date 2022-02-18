@@ -38,4 +38,12 @@ module.exports = class IslePlayerDatabase {
             });
         });
     }
+
+    async createDinoObject(){
+        const dinoObj = {
+
+        };
+
+        return dinoObj;
+    }
 }
