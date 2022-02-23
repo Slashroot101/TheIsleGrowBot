@@ -41,22 +41,32 @@ module.exports = class DinoFactory {
 
     setCharacterPosition(position){
         if(position === null) return this;
+        this.dinoObject['Location_Isle_V3'] = position;
+        return this;
     }
 
     setCharacterRotation(rotation){
         if(rotation === null) return this;
+        this.dinoObject["Rotation_Isle_V3"] = rotation;
+        return this;
     }
 
     setCharacterGrowth(growth){
         if(growth === null) return this;
+        this.dinoObject["Growth"] = growth;
+        return this;
     }
 
     setCharacterHunger(hunger){
         if(hunger === null) return this;
+        this.dinoObject["Hunger"] = hunger;
+        return this;
     }
 
     setCharacterThirst(thirst){
         if(thirst === null) return this;
+        this.dinoObject["Thirst"] = thirst;
+        return this;
     }
 
     setCharacterStamina(stamina){
