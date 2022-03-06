@@ -8,6 +8,7 @@ const { UserBank, GrowDinoRequest } = require('../model');
 const growStatusEnum  = require('../model/Enum/GrowStatusEnum');
 const { MessageActionRow, MessageButton } = require('discord.js');
 const IslePlayerDatabase = require('../lib/IslePlayerDatabase');
+const DinoFactory = require('../lib/DinoFactory');
 const playerDataBaseAccessor = new IslePlayerDatabase(process.env.playerDatabase);
 
 module.exports = {
@@ -110,34 +111,9 @@ async function updateDinoFile(interaction, user, userBank, dinoId, cost){
 }
 
 async function writeNewDino(interaction, user, userBank, dinoId, cost){
-    const newFile = {
-        "CharacterClass": dinoId,
-        "DNA": "",
-        "Location_Isle_V3": "X=-33316.137 Y=533458.750 Z=-65061.266",
-        "Rotation_Isle_V3": "P=0.000000 Y=87.753326 R=0.000000",
-        "Growth": "1.0",
-        "Hunger": "792",
-        "Thirst": "56",
-        "Stamina": "212",
-        "Health": "3600",
-        "BleedingRate": "0",
-        "Oxygen": "40",
-        "bGender": true,
-        "bIsResting": false,
-        "bBrokenLegs": false,
-        "ProgressionPoints": "0",
-        "ProgressionTier": "1",
-        "UnlockedCharacters": "ParaAdultS;",
-        "CameraRotation_Isle_V3": "P=0.000000 Y=177.753403 R=0.000000",
-        "CameraDistance_Isle_V3": "599.999451",
-        "SkinPaletteSection1": 50,
-        "SkinPaletteSection2": 59,
-        "SkinPaletteSection3": 20,
-        "SkinPaletteSection4": 56,
-        "SkinPaletteSection5": 22,
-        "SkinPaletteSection6": 254,
-        "SkinPaletteVariation": "6.0"
-    };
+    const newFile = new DinoFactory()
+                            .setCharacterClass(dinoId)
+                            .render();
 
     await playerDataBaseAccessor.writePlayerSave(user.steamId, JSON.stringify(newFile));
     await userBank.update({where: {UserId: user.id}}, {balance: userBank.balance - cost});
