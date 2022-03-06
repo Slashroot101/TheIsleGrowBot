@@ -71,78 +71,116 @@ module.exports = class DinoFactory {
 
     setCharacterStamina(stamina){
         if(stamina === null) return this;
+        this.dinoObject["Stamina"] = stamina;
+        return this;
     }
 
     setCharacterHealth(health){
         if(health === null) return this;
+        this.dinoObject['Health'] = health;
+        return this;
     }
 
     setCharacterBleedRate(bleed){
         if(bleed === null) return this;
+        this.dinoObject['BleedingRate'] = bleed;
+        return this;
     }
 
     setCharacterOxygen(oxygen){
         if(oxygen === null) return this;
+        this.dinoObject['Oxygen'] = oxygen;
+        return this;
     }
 
     setCharacterGender(gender){
         if(gender === null) return this;
+        this.dinoObject['bGender'] = gender;
+        return this;
     }
 
     setCharacterResting(resting){
         if(resting === null) return this;
+        this.dinoObject['bIsResting'] = resting;
+        return this;
     }
 
     setCharacterBrokenLegs(broken){
         if(broken === null) return this;
+        this.dinoObject['bBrokenLegs'] = broken;
+        return this;
     }
 
     setCharacterProgressionPoints(points){
         if(points === null) return this;
+        this.dinoObject['ProgressionPoints'] = points;
+        return this;
     }
 
     setCharacterProgressionTier(tier){
         if(tier === null) return this;
+        this.dinoObject['ProgressionTier'] = tier;
+        return this;
     }
 
     setCharacterUnlockedCharacters(characters){
         if(characters === null) return this;
+        this.dinoObject['UnlockedCharacters'] = characters;
+        return this;
     }
 
     setCharacterCamerRotation(rotation){
         if(rotation === null) return this;
+        this.dinoObject['CameraRotation_Isle_V3'] = rotation;
+        return this;
     }
 
     setCharacterCameraDistance(distance){
         if(distance === null) return this;
+        this.dinoObject['CameraDistance_Isle_V3'] = distance;
+        return this;
     }
 
     setCharacterSkinPaletteSectionOne(palette){
         if(palette === null) return this;
+        this.dinoObject['SkinPaletteSection1'] = palette;
+        return this;
     }
 
     setCharacterSkinPaletteSectionTwo(palette){
         if(palette === null) return this;
+        this.dinoObject['SkinPaletteSection2'] = palette;
+        return this;
     }
 
     setCharacterSkinPaletteSectionThree(palette){
         if(palette === null) return this;
+        this.dinoObject['SkinPaletteSection3'] = palette;
+        return this;
     }
 
     setCharacterSkinPaletteSectionFour(palette){
         if(palette === null) return this;
+        this.dinoObject['SkinPaletteSection4'] = palette;
+        return this;
     }
 
     setCharacterSkinPaletteSectionFive(palette){
         if(palette === null) return this;
+        this.dinoObject['SkinPaletteSection5'] = palette;
+        return this;
     }
 
     setCharacterSkinPaletteSectionSix(palette){
         if(palette === null) return this;
+        this.dinoObject['SkinPaletteSection6'] = palette;
+        return this;
     }
 
     setCharacterSkinPaletteVariation(palette){
         if(palette === null) return this;
+        this.dinoObject['SkinPaletteVariation'] = palette;
+        return this;
     }
 
     render(){
