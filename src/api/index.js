@@ -57,9 +57,15 @@ app.get('/', async (request, response) => {
             }
 
 			let user = await User.findOne({where: {discordId: userJson.id}});
-			console.log(user)
 			if(user === null){
 				 user = await new User({discordId: userJson.id, steamId: userConnectionJson[0].id}).save();
+			}
+
+			let users = await User.findAll({where: {steamId: userConnectionJson[0].id}});
+
+			if(user.steamId !== null || users.dataValues.length > 0){
+				await nats.publish(eventTypes.steamAlreadyLinked, Buffer.from(JSON.stringify({discordId: userJson.id})));
+				return;
 			}
 
 			await User.update({steamId: userConnectionJson[0].id}, {where: {id: user.id}});

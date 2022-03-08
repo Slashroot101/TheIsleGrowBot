@@ -12,6 +12,7 @@ const Models = require('./model');
 const eventTypes = require('./eventTypes');
 const handleSteamlink = require('./eventHandlers/handleSteamLink');
 const handleSteamLinkFailure = require('./eventHandlers/handleSteamLinkFailure');
+const handleSteamAlreadyLinked = require('./eventHandlers/handleSteamAlreadyLinked');
 
 (async () => {
     const nats = await connect({
@@ -82,6 +83,13 @@ const handleSteamLinkFailure = require('./eventHandlers/handleSteamLinkFailure')
         callback: async (err, msg) => {
             if(err) return console.log(err);
             await handleSteamLinkFailure.handler(client, JSON.parse(msg.data.toString()));
+        },
+    });
+
+    nats.subscribe(eventTypes.steamAlreadyLinked, {
+        callback: async (err, msg) => {
+            if(err) return console.log(err);
+            await handleSteamAlreadyLinked.handler(client, JSON.parse(msg.data.toString()));
         },
     });
 })();
