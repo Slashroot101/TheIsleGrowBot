@@ -1,15 +1,23 @@
 const fs = require('fs');
 const { Client, Intents, Collection } = require('discord.js');
-const { token } = require('./config');
+const { token, natsUrl } = require('./config');
 const {initializeCommands} = require('./deploy-commands');
 const client = new Client({intents: [Intents.FLAGS.GUILDS]});
 const path = require('path');
 const database = require('./database');
 const {deployRoles} = require('./deploy-roles');
 const { User } = require('./model');
+const {connect} = require('nats');
 const Models = require('./model');
+const eventTypes = require('./eventTypes');
+const handleSteamlink = require('./eventHandlers/handleSteamLink');
+const handleSteamLinkFailure = require('./eventHandlers/handleSteamLinkFailure');
 
 (async () => {
+    const nats = await connect({
+        url: natsUrl,
+    });
+
     initializeCommands();
     Object.keys(Models).forEach((ele) => {
         Models[ele].associate(Models);
@@ -61,5 +69,19 @@ const Models = require('./model');
         client.commands.set(command.data.name, command);
     }
     
-    client.login(token);
+    await client.login(token);
+
+    nats.subscribe(eventTypes.steamLinked, {
+        callback: async (err, msg) => {
+            if(err) return console.log(err);
+            await handleSteamlink.handler(client, JSON.parse(msg.data.toString()));
+        },
+    });
+
+    nats.subscribe(eventTypes.steamLinkedFailure, {
+        callback: async (err, msg) => {
+            if(err) return console.log(err);
+            await handleSteamLinkFailure.handler(client, JSON.parse(msg.data.toString()));
+        },
+    });
 })();

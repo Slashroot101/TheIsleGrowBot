@@ -12,4 +12,10 @@ module.exports = {
     guildId: process.env.GUILDID,
     playerDatabase: process.env.PLAYERDATABASE,
     referralAward: process.env.REFERRAL_AWARD,
+    port: process.env.PORT,
+    oauthUrl: process.env.OAUTHURL,
+    clientSecret: process.env.CLIENTSECRET,
+    natsUrl: process.env.natsUrl,
+    replyChannel: process.env.REPLY_CHANNEL,
+    host: process.env.HOST,
 };
