@@ -44,36 +44,42 @@ app.get('/', async (request, response) => {
                 },
             });
             
-            var userConnectionJson = (await userConnectionResult.json()).filter(x => x.type === 'steam');
+            var userConnectionJson = (await userConnectionResult.json());
 
-            console.log(userConnectionJson)
             var userJson = await userResult.json();
+			console.log(userJson, userConnectionJson)
+			if(userJson.code === 0 || userJson.message?.includes('401') || userConnectionJson.code === 0 || userConnectionJson.message?.includes('401')){
+				await nats.publish(eventTypes.steamLinkError);
+				return response.render('index.ejs', { oauthUrl });
+			}
 
             if(!userConnectionJson.length) {
 				await nats.publish(eventTypes.steamLinkedFailure, Buffer.from(JSON.stringify({
 					discordId: userJson.id,
 				})));
-				return;
+				return response.render('index.ejs', { oauthUrl });
             }
+
+			const filteredUsers = userConnectionJson.filter(x => x.type === 'steam');
 
 			let user = await User.findOne({where: {discordId: userJson.id}});
 			if(user === null){
-				 user = await new User({discordId: userJson.id, steamId: userConnectionJson[0].id}).save();
+				 user = await new User({discordId: userJson.id, steamId: filteredUsers[0].id}).save();
 			}
 
-			let users = await User.findAll({where: {steamId: userConnectionJson[0].id}});
-
-			if(user.steamId !== null || users.dataValues.length > 0){
+			let users = await User.findAll({where: {steamId: filteredUsers[0].id}});
+			console.log(users)
+			if(user.steamId !== null || users.length > 0){
 				await nats.publish(eventTypes.steamAlreadyLinked, Buffer.from(JSON.stringify({discordId: userJson.id})));
-				return;
+				return response.render('index.ejs', { oauthUrl });
 			}
 
-			await User.update({steamId: userConnectionJson[0].id}, {where: {id: user.id}});
+			await User.update({steamId: filteredUsers[0].id}, {where: {id: user.id}});
 			                                                                                                                                                                                                                                                                                                                                                                
 			await nats.publish(eventTypes.steamLinked, Buffer.from(JSON.stringify({
 				userId: user.id,
 				discordId: userJson.id,
-				steamId: userConnectionJson[0].id,
+				steamId: filteredUsers[0].id,
 			})));
 		} catch (error) {
 			// NOTE: An unauthorized token will not throw an error;

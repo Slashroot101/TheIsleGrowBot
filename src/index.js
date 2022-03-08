@@ -13,7 +13,7 @@ const eventTypes = require('./eventTypes');
 const handleSteamlink = require('./eventHandlers/handleSteamLink');
 const handleSteamLinkFailure = require('./eventHandlers/handleSteamLinkFailure');
 const handleSteamAlreadyLinked = require('./eventHandlers/handleSteamAlreadyLinked');
-
+const handleSteamLinkError = require('./eventHandlers/handleSteamLinkError');
 (async () => {
     const nats = await connect({
         url: natsUrl,
@@ -23,7 +23,7 @@ const handleSteamAlreadyLinked = require('./eventHandlers/handleSteamAlreadyLink
     Object.keys(Models).forEach((ele) => {
         Models[ele].associate(Models);
     });
-    await database.dbConnection.sync({force: true});
+    await database.dbConnection.sync({force: false});
     client.once('ready', async () => {
         await deployRoles(client);
         console.log('ready!');
@@ -90,6 +90,13 @@ const handleSteamAlreadyLinked = require('./eventHandlers/handleSteamAlreadyLink
         callback: async (err, msg) => {
             if(err) return console.log(err);
             await handleSteamAlreadyLinked.handler(client, JSON.parse(msg.data.toString()));
+        },
+    });
+
+    nats.subscribe(eventTypes.steamLinkError, {
+        callback: async (err, msg) => {
+            if(err) return console.log(err);
+            await handleSteamLinkError.handler(client, null);
         },
     });
 })();
