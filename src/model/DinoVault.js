@@ -15,9 +15,6 @@ DinoVault.init(
         savedName: {
             type: DataTypes.STRING,
         },
-        savedLocation: {
-            type: DataTypes.STRING,
-        },
         dinoJson: {
             type: DataTypes.STRING,
         },
