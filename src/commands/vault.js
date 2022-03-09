@@ -42,7 +42,7 @@ module.exports = {
 					console.log(jsonData);
 					var data = JSON.parse(jsonData);
 					console.log(jsonData);
-					await new DinoVault({savedName: name, dinoDisplayName: data['CharacterClass'], dinoJson: jsonData}).save();
+					await new DinoVault({savedName: name, vaultedById: user.id, dinoDisplayName: data['CharacterClass'], dinoJson: jsonData}).save();
 
 					return interaction.reply(`Successfully put ${name} into the vault!`);
 				})

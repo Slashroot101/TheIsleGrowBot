@@ -3,7 +3,8 @@ const { dbConnection } = require('../database');
 
 class DinoVault extends Model {
     static associate(models) {
-
+        models.DinoVault.belongsTo(models.User, {as: "vaultedBy"});
+        models.Referral.belongsTo(models.DinoVault, {as: "vaultedBy"});
     }
 }
 
