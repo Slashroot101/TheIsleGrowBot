@@ -2,6 +2,7 @@ const { SlashCommandBuilder } = require('@discordjs/builders');
 const {User, DinoVault} = require('../model');
 const { stat, readdir, rm, readFile, read } = require('fs');
 const {playerDatabase} = require('../config');
+const dinoData = require('./commandData/dino.json');
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('vault')
@@ -42,7 +43,7 @@ module.exports = {
 					console.log(jsonData);
 					var data = JSON.parse(jsonData);
 					console.log(jsonData);
-					await new DinoVault({savedName: name, vaultedById: user.id, dinoDisplayName: data['CharacterClass'], dinoJson: jsonData}).save();
+					await new DinoVault({savedName: name, vaultedById: user.id, dinoDisplayName: dinoData[data['CharacterClass']].displayName, dinoJson: jsonData}).save();
 
 					return interaction.reply(`Successfully put ${name} into the vault!`);
 				})
