@@ -16,7 +16,7 @@ DinoVault.init(
             type: DataTypes.STRING,
         },
         dinoJson: {
-            type: DataTypes.STRING,
+            type: DataTypes.JSON,
         },
     },
     {
