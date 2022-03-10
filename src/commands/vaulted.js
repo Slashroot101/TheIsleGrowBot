@@ -18,7 +18,7 @@ module.exports = {
         var vaulted = await DinoVault.findAll({where: {vaultedById: user.id}});
         const fields = [];
         vaulted.forEach(e => {
-            fields.push({ name: e.dinoDisplayName, value: e.savedName })
+            fields.push({ name: e.dinoDisplayName, value: `[${e.id}] ${e.savedName}` })
         });
         var embed = new MessageEmbed()
                         .setColor('#0099ff')
