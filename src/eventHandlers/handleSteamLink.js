@@ -1,7 +1,8 @@
 const eventTypes = require('../eventTypes');
 const {replyChannel} = require('../config');
 const { ClientBase } = require('pg');
-
+const {guildId} = require('../config');
+const instanceRoles = require('../seedData/roles.json');
 module.exports = {
     name: eventTypes.steamLinked,
     handler: async (client, data) => {

@@ -23,7 +23,7 @@ const handleSteamLinkError = require('./eventHandlers/handleSteamLinkError');
     Object.keys(Models).forEach((ele) => {
         Models[ele].associate(Models);
     });
-    await database.dbConnection.sync({force: true});
+    await database.dbConnection.sync({force: false});
     client.once('ready', async () => {
         await deployRoles(client);
         console.log('ready!');

@@ -30,8 +30,7 @@ module.exports = {
                             fields,
                         )
                         .setImage('https://media.istockphoto.com/photos/dinosaur-picture-id637987838?b=1&k=20&m=637987838&s=170667a&w=0&h=zAXR7LY31e1zm_DcwW8Fwu3AkwhTB0ZH6NAY1UIGI9o=')
-                        .setTimestamp()
-                        .setFooter({ text: 'Some footer text here', iconURL: 'https://i.imgur.com/AfFp7pu.png' });
+                        .setTimestamp();
 
         return await interaction.reply({embeds: [embed]});
     },

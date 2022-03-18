@@ -4,10 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "cross-env NODE_ENV=dev nodemon src/index.js",
-    "dev": "cross-env NODE_ENV=dev nodemon src/index.js",
-    "api": "cross-env NODE_ENV=dev nodemon src/api/index.js",
-    "register-dev": "cross-env NODE_ENV=dev nodemon src/deploy-commands.js"
+    "start": "cross-env NODE_ENV=dev node src/index.js",
+    "dev": "cross-env NODE_ENV=dev node src/index.js",
+    "api": "cross-env NODE_ENV=dev node src/api/index.js",
+    "register-dev": "cross-env NODE_ENV=dev node src/deploy-commands.js"
   },
   "author": "",
   "license": "ISC",
