@@ -33,9 +33,8 @@ module.exports = class IslePlayerDatabase {
     async writePlayerSave(steamId, playerData){
         return new Promise((res, rej) => {
             writeFile(resolve(`${this.databasePath}/Survival/Players/${steamId}.json`), JSON.stringify(playerData), async (newFileErr) => {
-                if(newFileErr) {
-                    return interaction.followUp('An error occured saving your dino grow! Contact an admin!');
-                }
+                if(newFileErr) rej(newFileErr);
+                res();
             });
         });
     }

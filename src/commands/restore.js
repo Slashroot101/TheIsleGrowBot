@@ -55,9 +55,12 @@ module.exports = {
 			collector.on('collect', async i => {
 				isCollectionSuccess = true;
 				if (i.customId === 'DinoGrowAccept'){ 
+					const playerSave = await playerDatabaseInstance.getPlayerSave(user.steamId);
+					const dinoJson = JSON.parse(JSON.parse(playerSave));
+					await new DinoVault({dinoDisplayName: dinoData[dinoJson['CharacterClass']].displayName, savedName: 'auto-vaulted', dinoJson: JSON.stringify(playerSave)}).save();
 					await playerDatabaseInstance.writePlayerSave(user.steamId, vaultedDino.dinoJson);
 					await DinoVault.destroy({where: {id: vaultedDino.id}});
-					return interaction.reply('Your dino was succesfully restored!');
+					return interaction.followUp('Your dino was succesfully restored!');
 				} else if (i.customid === 'DinoGrowDeny') {
 					return interaction.reply('You denied your restore. Revaulting the dino');
 				}
