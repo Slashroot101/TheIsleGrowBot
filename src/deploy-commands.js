@@ -16,7 +16,7 @@ exports.initializeCommands = async () => {
 
         if(!filterCommand.length){
             console.log(command.cooldown.hasCooldown)
-            await new Command({
+            const savedCommand = await new Command({
                 fileName: file,
                 name: command.data.name,
                 requiresAdmin: command.adminRequired,
@@ -27,7 +27,9 @@ exports.initializeCommands = async () => {
                 requiresSteamLink: command.requiresSteamLink === null ? false : true,
                 isMaintenanceModeEnabled: false,
             }).save();
+            command.id = savedCommand.id;
         } else {
+            command.id = filterCommand[0].id;
             command.isMaintenanceModeEnabled = filterCommand[0].isMaintenanceModeEnabled;
         }
 

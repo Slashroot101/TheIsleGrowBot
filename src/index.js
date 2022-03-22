@@ -6,7 +6,7 @@ const client = new Client({intents: [Intents.FLAGS.GUILDS]});
 const path = require('path');
 const database = require('./database');
 const {deployRoles} = require('./deploy-roles');
-const { User } = require('./model');
+const { User, CommandAudit } = require('./model');
 const {connect} = require('nats');
 const Models = require('./model');
 const eventTypes = require('./eventTypes');
@@ -22,7 +22,7 @@ const handleSteamLinkError = require('./eventHandlers/handleSteamLinkError');
     Object.keys(Models).forEach((ele) => {
         Models[ele].associate(Models);
     });
-
+    console.log(syncDb)
     await database.dbConnection.sync({force: syncDb});
     await initializeCommands();
     client.once('ready', async () => {
@@ -55,6 +55,8 @@ const handleSteamLinkError = require('./eventHandlers/handleSteamLinkError');
     
         try {
             await command.execute(interaction, client);
+            console.log(command)
+            await new CommandAudit({executionTime: new Date(), cost: null, CommandId: command.id, UserId: user.id}).save();
         } catch (error) {
             await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
         }

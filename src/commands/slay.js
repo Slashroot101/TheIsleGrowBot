@@ -45,6 +45,7 @@ module.exports = {
                                 const collector = interaction.channel.createMessageComponentCollector({filter, time: 15000});
                                 let isCollectionSuccess = false;
                                 collector.on('collect', async i => {
+                                        isCollectionSuccess = true;
                                         rm(`${playerDatabase}/Survival/Players/${user.steamId}.json`, async (err) => {
                                                 if(err) {
                                                         await interaction.reply(' an error occured while slaying your dino');
@@ -60,7 +61,7 @@ module.exports = {
                                         }
                                 });
                         } else {
-                                await interaction.reply(' you do not have a dino to slay!');
+                                await interaction.reply(' You do not have a dino to slay!');
                         }
                         });
         },
