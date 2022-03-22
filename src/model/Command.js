@@ -1,7 +1,6 @@
 const { Sequelize, Model, DataTypes } = require('sequelize');
 const { dbConnection } = require('../database');
 
-
 class Command extends Model {
   static associate(models){
   }
@@ -11,9 +10,11 @@ Command.init(
   {
     fileName: {
       type: DataTypes.STRING,
+      unique: true,
     },
     name: {
       type: DataTypes.STRING,
+      unique: true,
     },
     cost: {
       type: DataTypes.INTEGER
@@ -21,7 +22,7 @@ Command.init(
     requiresAdmin: {
       type: DataTypes.BOOLEAN,
     },
-    hasCoolDown: {
+    hasCooldown: {
       type: DataTypes.BOOLEAN,
     },
     cooldownExecutions: {

@@ -19,11 +19,12 @@ const handleSteamLinkError = require('./eventHandlers/handleSteamLinkError');
         url: natsUrl,
     });
 
-    initializeCommands();
     Object.keys(Models).forEach((ele) => {
         Models[ele].associate(Models);
     });
+
     await database.dbConnection.sync({force: syncDb});
+    await initializeCommands();
     client.once('ready', async () => {
         await deployRoles(client);
         console.log('ready!');

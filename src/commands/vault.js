@@ -13,6 +13,11 @@ module.exports = {
 				.setRequired(true)),
     adminRequired: false,
     requiresSteamLink: true,
+		cooldown: {
+			hasCooldown: true,
+			cooldownExecutions: 1,
+			cooldownInMinutes: 1,
+	},
 	async execute(interaction) {
 		const user = await User.findOne({where: {discordId: interaction.user.id}});
 		const name = interaction.options.get('name').value;
