@@ -19,6 +19,11 @@ module.exports = {
                                 .addChoice('No', 'N')
                                 .setRequired(true)),
     adminRequired: false,
+    cooldown: {
+        hasCooldown: true,
+        cooldownExecutions: 1,
+        cooldownInMinutes: 1,
+    },
     async execute(interaction) {
         const discordId = interaction.options.get('discordid').value;
         const isApexApproved = interaction.options.get('isapexapproved').value;

@@ -7,6 +7,11 @@ module.exports = {
 		.setName('bal')
 		.setDescription('Replies with your fossil balance!'),
     adminRequired: false,
+    cooldown: {
+        hasCooldown: true,
+        cooldownExecutions: 1,
+        cooldownInMinutes: 1,
+    },
 	async execute(interaction) {
         const user = await User.findOne({where: {discordId: interaction.user.id}});
 		let bank = await UserBank.findOne({where: {UserId: user.id}});

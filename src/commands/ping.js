@@ -5,6 +5,11 @@ module.exports = {
 		.setName('ping')
 		.setDescription('Replies with Pong!'),
     adminRequired: false,
+		cooldown: {
+			hasCooldown: true,
+			cooldownExecutions: 1,
+			cooldownInMinutes: 1,
+		},
 	async execute(interaction) {
 		await interaction.reply('Pong!');
 	},

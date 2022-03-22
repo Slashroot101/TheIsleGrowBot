@@ -10,5 +10,11 @@
         "value": "RexAdultS",
         "cost": 100,
         "requiresApex": true
+    },
+    "AlloAdultS": {
+        "displayName": "Allosaurus",
+        "value": "AlloAdultS",
+        "cost": 100,
+        "requiresApex": false
     }
 }

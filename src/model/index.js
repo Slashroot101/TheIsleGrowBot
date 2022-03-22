@@ -4,6 +4,8 @@ const GrowDinoRequest = require('./GrowDinoRequest');
 const TransactionLog = require('./TransactionLog');
 const Referral = require('./Referrals');
 const DinoVault = require('./DinoVault');
+const Command = require('./Command');
+const CommandAudit = require('./CommandAudit');
 
 module.exports = {
 	User,
@@ -12,4 +14,6 @@ module.exports = {
 	TransactionLog,
 	Referral,
 	DinoVault,
+	Command,
+	CommandAudit,
 };

@@ -10,6 +10,11 @@ module.exports = {
 		.setName('slay')
 		.setDescription('Slays your current dino!'),
     adminRequired: false,
+    cooldown: {
+        hasCooldown: true,
+        cooldownExecutions: 1,
+        cooldownInMinutes: 1,
+},
     requiresSteamLink: true,
         async execute(interaction) {
                 const user = await User.findOne({where: {discordId: interaction.user.id}});

@@ -8,6 +8,11 @@ module.exports = {
         .setName('linksteam')
         .setDescription('Links your steam account to fossil bot.'),
     adminRequired: false,
+    cooldown: {
+        hasCooldown: true,
+        cooldownExecutions: 1,
+        cooldownInMinutes: 1,
+    },
     async execute(interaction) {
         const users = await User.findAll({where: { discordId: interaction.user.id, }});
         if(users.length && users[0].steamId !== null) return interaction.reply('A user with your Discord ID or Steam ID is already registered!');

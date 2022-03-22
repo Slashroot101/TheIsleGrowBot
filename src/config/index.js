@@ -18,4 +18,5 @@ module.exports = {
     natsUrl: process.env.natsUrl,
     replyChannel: process.env.REPLY_CHANNEL,
     host: process.env.HOST,
+    syncDb: process.env.SYNC_DB,
 };

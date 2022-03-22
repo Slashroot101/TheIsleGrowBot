@@ -25,6 +25,16 @@ module.exports = {
                 return opt;
             }
         ),
+        cooldown: {
+			hasCooldown: true,
+			cooldownExecutions: 1,
+			cooldownInMinutes: 1,
+		},
+        cooldown: {
+			hasCooldown: true,
+			cooldownExecutions: 1,
+			cooldownInMinutes: 1,
+		},
     adminRequired: false,
     requiresSteamLink: true,
 	async execute(interaction) {

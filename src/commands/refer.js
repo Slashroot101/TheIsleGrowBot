@@ -12,6 +12,11 @@ module.exports = {
                 .setDescription('The ID of the steam user that you referred!')
                 .setRequired(true)),
     adminRequired: false,
+    cooldown: {
+        hasCooldown: true,
+        cooldownExecutions: 1,
+        cooldownInMinutes: 1,
+    },
 	async execute(interaction, client) {
         const userId = interaction.options.get('id').value;
         if(userId === interaction.user.id){

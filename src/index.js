@@ -1,6 +1,6 @@
 const fs = require('fs');
 const { Client, Intents, Collection } = require('discord.js');
-const { token, natsUrl } = require('./config');
+const { token, natsUrl, syncDb } = require('./config');
 const {initializeCommands} = require('./deploy-commands');
 const client = new Client({intents: [Intents.FLAGS.GUILDS]});
 const path = require('path');
@@ -23,7 +23,7 @@ const handleSteamLinkError = require('./eventHandlers/handleSteamLinkError');
     Object.keys(Models).forEach((ele) => {
         Models[ele].associate(Models);
     });
-    await database.dbConnection.sync({force: false});
+    await database.dbConnection.sync({force: syncDb});
     client.once('ready', async () => {
         await deployRoles(client);
         console.log('ready!');
@@ -55,7 +55,6 @@ const handleSteamLinkError = require('./eventHandlers/handleSteamLinkError');
         try {
             await command.execute(interaction, client);
         } catch (error) {
-            console.log(error)
             await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
         }
     });

@@ -17,6 +17,11 @@ module.exports = {
                 .setRequired(true)
             ),
     adminRequired: false,
+    cooldown: {
+        hasCooldown: true,
+        cooldownExecutions: 1,
+        cooldownInMinutes: 1,
+    },
 	async execute(interaction) {
         const isBlacklisted = interaction.options.get('isblacklisted').value;
         const userId = interaction.options.get('id').value;

@@ -8,6 +8,11 @@ module.exports = {
 		.setName('vaulted')
 		.setDescription('Returns a list of your vaulted dinosaurs!'),
     adminRequired: false,
+    cooldown: {
+        hasCooldown: true,
+        cooldownExecutions: 1,
+        cooldownInMinutes: 1,
+    },
 	async execute(interaction) {
         const user = await User.findOne({where: {discordId: interaction.user.id}});
         

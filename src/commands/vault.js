@@ -40,9 +40,7 @@ module.exports = {
 					if(err){
 						return interaction.reply('An error occured while deleting your player save for vaulting.');
 					}
-					console.log(jsonData);
 					var data = JSON.parse(JSON.parse(jsonData));
-					console.log(jsonData);
 					await new DinoVault({savedName: name, vaultedById: user.id, dinoDisplayName: dinoData[data['CharacterClass']].displayName, dinoJson: jsonData}).save();
 
 					return interaction.reply(`Successfully put ${name} into the vault!`);

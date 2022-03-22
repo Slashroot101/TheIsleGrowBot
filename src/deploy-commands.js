@@ -7,10 +7,19 @@ const path = require('path');
 
 exports.initializeCommands = () => {
     const commands = [];
+    const databaseCommands = [];
     const commandFiles = fs.readdirSync(path.resolve(__dirname, './commands')).filter(file => file.endsWith('.js'));
     
     for (const file of commandFiles) {
         const command = require(`./commands/${file}`);
+        console.log(command.data)
+        databaseCommands.push({
+            fileName: file,
+            name: command.data.name,
+            requiresAdmin: command.adminRequired,
+            cost: null,
+            hasCooldown: command.cooldown.hasCooldown,
+        });
         commands.push(command.data.toJSON());
     }
     

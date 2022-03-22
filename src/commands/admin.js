@@ -16,6 +16,11 @@ module.exports = {
                 .setRequired(true)
             ),
     adminRequired: true,
+    cooldown: {
+        hasCooldown: true,
+        cooldownExecutions: 1,
+        cooldownInMinutes: 1,
+    },
 	async execute(interaction) {
         const isPromoted = interaction.options.get('isadmin').value;
         const userId = interaction.options.get('id').value;
