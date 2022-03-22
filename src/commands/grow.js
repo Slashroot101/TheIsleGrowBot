@@ -26,9 +26,9 @@ module.exports = {
             }
         ),
         cooldown: {
-			hasCooldown: true,
-			cooldownExecutions: 1,
-			cooldownInMinutes: 1,
+            hasCooldown: true,
+            cooldownExecutions: 1,
+            cooldownInMinutes: 7200,
 		},
         cooldown: {
 			hasCooldown: true,

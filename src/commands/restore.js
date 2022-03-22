@@ -19,7 +19,7 @@ module.exports = {
 		cooldown: {
 			hasCooldown: true,
 			cooldownExecutions: 1,
-			cooldownInMinutes: 1,
+			cooldownInMinutes: 7200,
 		},
 	async execute(interaction) {
 		const user = await User.findOne({where: {discordId: interaction.user.id}});

@@ -10,7 +10,7 @@ module.exports = {
     adminRequired: false,
     cooldown: {
         hasCooldown: true,
-        cooldownExecutions: 1,
+        cooldownExecutions: 5,
         cooldownInMinutes: 1,
     },
     async execute(interaction) {

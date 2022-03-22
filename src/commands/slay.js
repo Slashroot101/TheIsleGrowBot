@@ -12,8 +12,8 @@ module.exports = {
     adminRequired: false,
     cooldown: {
         hasCooldown: true,
-        cooldownExecutions: 3,
-        cooldownInMinutes: 1,
+        cooldownExecutions: 1,
+        cooldownInMinutes: 7200,
     },
     requiresSteamLink: true,
         async execute(interaction) {
