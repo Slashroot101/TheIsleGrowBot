@@ -5,6 +5,7 @@ const { clientId, token, guildId } = require('./config');
 const fs = require('fs');
 const path = require('path');
 const {Command} = require('./model');
+const { fil } = require('date-fns/locale');
 
 exports.initializeCommands = async () => {
     const commands = [];
@@ -29,6 +30,17 @@ exports.initializeCommands = async () => {
             }).save();
             command.id = savedCommand.id;
         } else {
+            await Command.update({
+                fileName: file,
+                name: command.data.name,
+                requiresAdmin: command.adminRequired,
+                cost: null,
+                hasCooldown: command.cooldown.hasCooldown,
+                cooldownExecutions: command.cooldown.cooldownExecutions,
+                cooldownInMinutes: command.cooldown.cooldownInMinutes,
+                requiresSteamLink: command.requiresSteamLink === null ? false : true,
+                isMaintenanceModeEnabled: false,
+            },{where: {id: filterCommand[0].id}});
             command.id = filterCommand[0].id;
             command.isMaintenanceModeEnabled = filterCommand[0].isMaintenanceModeEnabled;
         }

@@ -5,6 +5,7 @@ const {initializeCommands} = require('./deploy-commands');
 const client = new Client({intents: [Intents.FLAGS.GUILDS]});
 const path = require('path');
 const database = require('./database');
+const {Op} = require('sequelize');
 const {deployRoles} = require('./deploy-roles');
 const { User, CommandAudit } = require('./model');
 const {connect} = require('nats');
@@ -14,6 +15,8 @@ const handleSteamlink = require('./eventHandlers/handleSteamLink');
 const handleSteamLinkFailure = require('./eventHandlers/handleSteamLinkFailure');
 const handleSteamAlreadyLinked = require('./eventHandlers/handleSteamAlreadyLinked');
 const handleSteamLinkError = require('./eventHandlers/handleSteamLinkError');
+const {subMinutes, formatDistance, addMinutes} = require('date-fns');
+
 (async () => {
     const nats = await connect({
         url: natsUrl,
@@ -23,7 +26,7 @@ const handleSteamLinkError = require('./eventHandlers/handleSteamLinkError');
         Models[ele].associate(Models);
     });
     console.log(syncDb)
-    await database.dbConnection.sync({force: syncDb});
+    await database.dbConnection.sync({force: false});
     await initializeCommands();
     client.once('ready', async () => {
         await deployRoles(client);
@@ -43,8 +46,15 @@ const handleSteamLinkError = require('./eventHandlers/handleSteamLinkError');
         }
 
         const command = client.commands.get(interaction.commandName);
-    
         if (!command) return;
+        if(command.cooldown.hasCooldown && (user.isAdmin === 'N' || user.isAdmin === null)){
+            const commandRange = subMinutes(new Date(), command.cooldown.cooldownInMinutes);
+            const commandExecutions = await CommandAudit.findAll({where: {UserId: user.id, executionTime: {[Op.gt]: commandRange}, CommandId: command.id}, order: [['executionTime', 'desc']]});
+            if(commandExecutions.length >= command.cooldown.cooldownExecutions){
+                const commandNextDate = addMinutes(new Date(commandExecutions[0].executionTime), command.cooldown.cooldownInMinutes);
+                return interaction.reply(`This command is on cooldown for you for ${formatDistance(commandNextDate, new Date())}`);
+            }
+        }
         if(command.adminRequired && user.dataValues.isAdmin === 'N' || user.dataValues.isAdmin === null){
             return interaction.reply('You must be an admin to use that command!');
         }
@@ -55,7 +65,6 @@ const handleSteamLinkError = require('./eventHandlers/handleSteamLinkError');
     
         try {
             await command.execute(interaction, client);
-            console.log(command)
             await new CommandAudit({executionTime: new Date(), cost: null, CommandId: command.id, UserId: user.id}).save();
         } catch (error) {
             await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });

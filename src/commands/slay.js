@@ -12,9 +12,9 @@ module.exports = {
     adminRequired: false,
     cooldown: {
         hasCooldown: true,
-        cooldownExecutions: 1,
+        cooldownExecutions: 3,
         cooldownInMinutes: 1,
-},
+    },
     requiresSteamLink: true,
         async execute(interaction) {
                 const user = await User.findOne({where: {discordId: interaction.user.id}});
