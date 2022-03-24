@@ -16,29 +16,41 @@ module.exports = {
 		.setName('grow')
 		.setDescription('Uses fossils to grow your dino on the server.')
         .addStringOption(opt => {
-                const options = opt.setName('dino').setDescription('The dinosaur you want to grow to');
-
+                const options = opt.setName('dino').setDescription('Dinosaurs that have a cost.');
+                options.setRequired(false);
                 for(var key in dinoData){
-                    options.addChoice(dinoData[key].displayName, dinoData[key].value);
+                    if(dinoData[key].cost === 0) continue;
+                    options.addChoice(`${dinoData[key].displayName} (${dinoData[key].cost} fossils)`, dinoData[key].value);
+                }
+
+                return opt;
+            }
+        )
+        .addStringOption(opt => {
+                const options = opt.setName('freedino').setDescription('Dinosaurs that have a cost.');
+                options.setRequired(false);
+                for(var key in dinoData){
+                    if(dinoData[key].cost !== 0) continue;
+                    options.addChoice(`${dinoData[key].displayName} (0 fossils)`, dinoData[key].value);
                 }
 
                 return opt;
             }
         ),
-        cooldown: {
-            hasCooldown: true,
-            cooldownExecutions: 1,
-            cooldownInMinutes: 7200,
-		},
-        cooldown: {
-			hasCooldown: true,
-			cooldownExecutions: 1,
-			cooldownInMinutes: 1,
-		},
+    cooldown: {
+        hasCooldown: true,
+        cooldownExecutions: 1,
+        cooldownInMinutes: 7200,
+    },
+    cooldown: {
+        hasCooldown: true,
+        cooldownExecutions: 1,
+        cooldownInMinutes: 1,
+    },
     adminRequired: false,
     requiresSteamLink: true,
 	async execute(interaction) {
-        const dinoId = interaction.options.get('dino').value;
+        const dinoId = interaction.options.get('dino')?.value || interaction.options.get('freedino').value;
         const user = await User.findOne({where: {discordId: interaction.user.id}});
 
         if(user.steamId === null){
@@ -51,7 +63,7 @@ module.exports = {
         const userBank = await UserBank.findOne({where: {UserId: user.id}});
         var cost = dinoData[dinoId].cost;
 
-        if(userBank === null || userBank.balance == null || userBank.balance - cost < 0) {
+        if(cost !== 0 && userBank === null || userBank.balance == null || userBank.balance - cost < 0) {
             return interaction.reply('You do not have enough fossils to afford that!');
         }
 

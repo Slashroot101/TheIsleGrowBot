@@ -64,9 +64,10 @@ const {subMinutes, formatDistance, addMinutes} = require('date-fns');
         }
     
         try {
-            await command.execute(interaction, client);
             await new CommandAudit({executionTime: new Date(), cost: null, CommandId: command.id, UserId: user.id}).save();
+            await command.execute(interaction, client);
         } catch (error) {
+            console.log(error)
             await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
         }
     });

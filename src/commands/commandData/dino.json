@@ -2,19 +2,175 @@
     "SuchoAdultS": {
         "displayName": "Suchomimus",
         "value": "SuchoAdultS",
-        "cost": 100,
+        "cost": 200,
         "requiresApex": false
     },
     "RexAdultS": {
         "displayName": "T-Rex",
         "value": "RexAdultS",
-        "cost": 100,
+        "cost": 2500,
         "requiresApex": true
     },
     "AlloAdultS": {
         "displayName": "Allosaurus",
         "value": "AlloAdultS",
+        "cost": 200,
+        "requiresApex": false
+    },
+    "CarnoAdultS": {
+        "displayName": "Carnotaurus",
+        "value": "CarnoAdultS",
+        "cost": 200,
+        "requiresApex": false
+    },
+    "CeratoAdultS": {
+        "displayName": "Ceratosaurus",
+        "value": "CeratoAdultS",
+        "cost": 200,
+        "requiresApex": false
+    },
+    "DiloAdultS": {
+        "displayName": "Dilophosaurus",
+        "value": "DiloAdultS",
         "cost": 100,
         "requiresApex": false
+    },
+    "GigaAdultS": {
+        "displayName": "Giganotosaurus",
+        "value": "GigaAdultS",
+        "cost": 2500,
+        "requiresApex": true
+    },
+    "UtahAdultS": {
+        "displayName": "Utahraptor",
+        "value": "UtahAdultS",
+        "cost": 100,
+        "requiresApex": false
+    },
+    "Spino": {
+        "displayName": "Spinosaurus",
+        "value": "Spino",
+        "cost": 2500,
+        "requiresApex": true
+    },
+    "Herrera": {
+        "displayName": "Herrerasaurus",
+        "value": "Herrera",
+        "cost": 25,
+        "requiresApex": false
+    },
+    "Bary": {
+        "displayName": "Baryonx",
+        "value": "Bary",
+        "cost": 100,
+        "requiresApex": false
+    },
+    "Acro": {
+        "displayName": "Acrocanthosaurus",
+        "value": "Acro",
+        "cost": 350,
+        "requiresApex": false
+    },
+    "Theri": {
+        "displayName": "Therizinosaurus",
+        "value": "Theri",
+        "cost": 250,
+        "requiresApex": false
+    },
+    "Stego": {
+        "displayName": "Stegosaurus",
+        "value": "Stego",
+        "cost": 150,
+        "requiresApex": false
+    },
+    "Shant": {
+        "displayName": "Shantungosaurus",
+        "value": "Shant",
+        "cost": 500,
+        "requiresApex": false
+    },
+    "Camara": {
+        "displayName": "Camarasaurus",
+        "value": "Camara",
+        "cost": 1100,
+        "requiresApex": false
+    },
+    "Austro": {
+        "displayName": "austroraptor",
+        "value": "Austro",
+        "cost": 25,
+        "requiresApex": false
+    },
+    "Anky": {
+        "displayName": "Ankylosaurus",
+        "value": "Anky",
+        "cost": 100,
+        "requiresApex": false
+    },
+    "DiabloAdultS": {
+        "displayName": "Diabloceratops",
+        "value": "DiabloAdultS",
+        "cost": 200,
+        "requiresApex": false
+    },
+    "DryoAdultS": {
+        "displayName": "Dryosaurus",
+        "value": "DryoAdultS",
+        "cost": 100,
+        "requiresApex": false
+    },
+    "GalliAdultS": {
+        "displayName": "Gallimimus",
+        "value": "GalliAdultS",
+        "cost": 100,
+        "requiresApex": false
+    },
+    "MaiaAdultS": {
+        "displayName": "Maiasaurus",
+        "value": "MaiaAdultS",
+        "cost": 200,
+        "requiresApex": false
+    },
+    "PachyAdultS": {
+        "displayName": "Pachycephalosaurs",
+        "value": "PachyAdultS",
+        "cost": 100,
+        "requiresApex": false
+    },
+    "ParaAdultS": {
+        "displayName": "Parasaurolophus",
+        "value": "ParaAdultS",
+        "cost": 200,
+        "requiresApex": false
+    },
+    "TrikeAdultS": {
+        "displayName": "Triceratops",
+        "value": "TrikeAdultS",
+        "cost": 400,
+        "requiresApex": false
+    },
+    "Velo": {
+        "displayName": "Velociraptor",
+        "value": "Velo",
+        "cost": 0,
+        "requiresApex": false
+    },
+    "Taco": {
+        "displayName": "Psittacosaurus",
+        "value": "Taco",
+        "cost": 0,
+        "requiresApex": false
+    },
+    "Oro": {
+        "displayName": "Orodromeus",
+        "value": "Oro",
+        "cost": 0,
+        "requiresApex": false
+    },
+    "Ava": {
+        "displayName": "Avaceratops",
+        "value": "Ava",
+        "cost": 0,
+        "requiresApex": false
     }
-}
+}   
