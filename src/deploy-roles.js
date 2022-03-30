@@ -10,7 +10,6 @@ exports.deployRoles = async (client) => {
         let doesRoleExist = guild.roles.cache.filter(x => x.name === role.name);
         if(doesRoleExist.size) {
             const [firstValue] = doesRoleExist.keys();
-            console.log(role, firstValue)
             this.instanceRoles.set(role.code, {id: firstValue});
             continue;
         };

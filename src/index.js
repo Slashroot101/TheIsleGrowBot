@@ -46,6 +46,10 @@ const {subMinutes, formatDistance, addMinutes} = require('date-fns');
         }
 
         const command = client.commands.get(interaction.commandName);
+        const savedCommand = await Models.Command.findOne({where: {name: interaction.commandName}});
+        if(savedCommand.isMaintenanceModeEnabled) {
+            return interaction.reply(`${savedCommand.name} is currently in maintenance mode! Please try again later, or contact an admin.`);
+        }
         if (!command) return;
         if(command.cooldown.hasCooldown && (user.isAdmin === 'N' || user.isAdmin === null)){
             const commandRange = subMinutes(new Date(), command.cooldown.cooldownInMinutes);

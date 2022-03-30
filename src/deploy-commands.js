@@ -39,7 +39,7 @@ exports.initializeCommands = async () => {
                 cooldownExecutions: command.cooldown.cooldownExecutions,
                 cooldownInMinutes: command.cooldown.cooldownInMinutes,
                 requiresSteamLink: command.requiresSteamLink === null ? false : true,
-                isMaintenanceModeEnabled: false,
+                isMaintenanceModeEnabled: filterCommand[0].isMaintenanceModeEnabled,
             },{where: {id: filterCommand[0].id}});
             command.id = filterCommand[0].id;
             command.isMaintenanceModeEnabled = filterCommand[0].isMaintenanceModeEnabled;
