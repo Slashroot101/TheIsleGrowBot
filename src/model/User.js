@@ -27,7 +27,11 @@ User.init(
 		isApexApproved: {
 			type: DataTypes.ENUM('Y', 'N'),
 			defaultValue: 'N',
-		}
+		},
+		emailAddress: {
+			type: DataTypes.STRING,
+			unique: true,
+		},
 	},
 	{
 		paranoid: true,
