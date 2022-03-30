@@ -1,6 +1,5 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const { resolve } = require('path');
-const { readFile, writeFile, exists } = require('fs');
+const { exists } = require('fs');
 const { playerDatabase } = require('../config');
 const User = require('../model/User');
 const dinoData = require('./commandData/dino.json');

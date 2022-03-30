@@ -1,11 +1,9 @@
-const { SlashCommandBuilder } = require('@discordjs/builders');
 const { REST } = require('@discordjs/rest');
 const { Routes } = require('discord-api-types/v9');
 const { clientId, token, guildId } = require('./config');
 const fs = require('fs');
 const path = require('path');
 const {Command} = require('./model');
-const { fil } = require('date-fns/locale');
 
 exports.initializeCommands = async () => {
     const commands = [];
