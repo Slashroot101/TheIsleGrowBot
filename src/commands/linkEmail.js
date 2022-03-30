@@ -1,5 +1,6 @@
 const {SlashCommandBuilder} = require('@discordjs/builders');
 const {User} = require('../model');
+const {createCustomer} = require('../lib/stripeAccessor');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -20,8 +21,8 @@ module.exports = {
       if(!isValidEmail) {
         return interaction.reply('You must provide a valid email!');
       }
-
-      await User.update({emailAddress: email}, {where: {id: user.id}});
+      const customer = await createCustomer(email, {discordId: interaction.user.id, userId: user.id}, interaction.user.username);
+      await User.update({emailAddress: email, stripeId: customer.id}, {where: {id: user.id}});
       return interaction.reply('Your email was succesfully linked!');
     }
 };

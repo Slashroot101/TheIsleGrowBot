@@ -32,6 +32,10 @@ User.init(
 			type: DataTypes.STRING,
 			unique: true,
 		},
+		stripeId: {
+			type: DataTypes.STRING,
+			unique: true,
+		},
 	},
 	{
 		paranoid: true,

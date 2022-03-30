@@ -26,7 +26,8 @@
     "nats": "^2.6.1",
     "node-fetch": "^2.6.7",
     "pg": "^8.7.3",
-    "sequelize": "^6.15.0"
+    "sequelize": "^6.15.0",
+    "stripe": "^8.214.0"
   },
   "devDependencies": {
     "eslint": "^8.8.0",
