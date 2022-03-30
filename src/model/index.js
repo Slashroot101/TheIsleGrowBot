@@ -6,6 +6,7 @@ const Referral = require('./Referrals');
 const DinoVault = require('./DinoVault');
 const Command = require('./Command');
 const CommandAudit = require('./CommandAudit');
+const UserCommandBlacklist = require('./UserCommandBlacklist');
 
 module.exports = {
 	User,
@@ -16,4 +17,5 @@ module.exports = {
 	DinoVault,
 	Command,
 	CommandAudit,
+	UserCommandBlacklist,
 };

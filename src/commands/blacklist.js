@@ -4,7 +4,7 @@ const { User } = require('../model');
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('blacklist')
-		.setDescription('Replies with Pong!')
+		.setDescription('Blacklist the user!')
         .addStringOption(opt => 
             opt.setName('id')
                 .setDescription('The ID of the steam user to blacklist.')

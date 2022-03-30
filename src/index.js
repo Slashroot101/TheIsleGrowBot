@@ -7,7 +7,7 @@ const path = require('path');
 const database = require('./database');
 const {Op} = require('sequelize');
 const {deployRoles} = require('./deploy-roles');
-const { User, CommandAudit } = require('./model');
+const { User, CommandAudit, UserCommandBlacklist } = require('./model');
 const {connect} = require('nats');
 const Models = require('./model');
 const eventTypes = require('./eventTypes');
@@ -46,11 +46,19 @@ const {subMinutes, formatDistance, addMinutes} = require('date-fns');
         }
 
         const command = client.commands.get(interaction.commandName);
+        if (!command) return;
+
         const savedCommand = await Models.Command.findOne({where: {name: interaction.commandName}});
+        const commandBlacklist = await UserCommandBlacklist.findAll({where: {UserId: user.id, CommandId: command.id}});
+
+        if(commandBlacklist.length) {
+            return interaction.reply('You are blacklisted from that command! Reach out to an admin if you think that is a mistake');
+        }
+
         if(savedCommand.isMaintenanceModeEnabled) {
             return interaction.reply(`${savedCommand.name} is currently in maintenance mode! Please try again later, or contact an admin.`);
         }
-        if (!command) return;
+
         if(command.cooldown.hasCooldown && (user.isAdmin === 'N' || user.isAdmin === null)){
             const commandRange = subMinutes(new Date(), command.cooldown.cooldownInMinutes);
             const commandExecutions = await CommandAudit.findAll({where: {UserId: user.id, executionTime: {[Op.gt]: commandRange}, CommandId: command.id}, order: [['executionTime', 'desc']]});
