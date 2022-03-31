@@ -11,10 +11,13 @@ const { User, CommandAudit, UserCommandBlacklist } = require('./model');
 const {connect} = require('nats');
 const Models = require('./model');
 const eventTypes = require('./eventTypes');
+const handleEvent = require('./lib/handleEvent');
 const handleSteamlink = require('./eventHandlers/handleSteamLink');
 const handleSteamLinkFailure = require('./eventHandlers/handleSteamLinkFailure');
 const handleSteamAlreadyLinked = require('./eventHandlers/handleSteamAlreadyLinked');
 const handleSteamLinkError = require('./eventHandlers/handleSteamLinkError');
+const handleDonationComplete = require('./eventHandlers/handleDonationComplete');
+const handleDonationUnverified = require('./eventHandlers/handleDonationUnverified');
 const {subMinutes, formatDistance, addMinutes} = require('date-fns');
 const {createWebhooks} = require('./lib/stripeAccessor');
 
@@ -99,30 +102,26 @@ const {createWebhooks} = require('./lib/stripeAccessor');
     await client.login(token);
 
     nats.subscribe(eventTypes.steamLinked, {
-        callback: async (err, msg) => {
-            if(err) return console.log(err);
-            await handleSteamlink.handler(client, JSON.parse(msg.data.toString()));
-        },
+        callback: (err, msg) => handleEvent(err, msg, client,  handleSteamlink.handler)
     });
 
     nats.subscribe(eventTypes.steamLinkedFailure, {
-        callback: async (err, msg) => {
-            if(err) return console.log(err);
-            await handleSteamLinkFailure.handler(client, JSON.parse(msg.data.toString()));
-        },
+        callback: (err, msg) => handleEvent(err, msg, handleSteamLinkFailure.handler)
     });
 
     nats.subscribe(eventTypes.steamAlreadyLinked, {
-        callback: async (err, msg) => {
-            if(err) return console.log(err);
-            await handleSteamAlreadyLinked.handler(client, JSON.parse(msg.data.toString()));
-        },
+        callback: (err, msg) => handleEvent(err, msg, client, handleSteamAlreadyLinked.handler)
     });
 
     nats.subscribe(eventTypes.steamLinkError, {
-        callback: async (err, msg) => {
-            if(err) return console.log(err);
-            await handleSteamLinkError.handler(client, null);
-        },
+        callback: (err, msg) => handleEvent(err, msg, client, handleSteamLinkError.handler)
+    });
+
+    nats.subscribe(eventTypes.donationComplete, {
+        callback: (err, msg) => handleEvent(err, msg, client,  handleDonationComplete.handler)
+    });
+
+    nats.subscribe(eventTypes.donationUnverified, {
+        callback: (err, msg) => handleEvent(err, msg, client,  handleDonationUnverified.handler)
     });
 })();

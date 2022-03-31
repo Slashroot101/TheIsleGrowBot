@@ -27,6 +27,10 @@ app.post('/donate', async (request, response ) => {
 		var metadata = request.body.data.object.metadata;
 		const userBank = await UserBank.findOne({where: {UserId: metadata.userId}});
 		await UserBank.update({balance: userBank.balance + Number(request.body.data.object.amount_total) / 100}, {where: {UserId: metadata.userId}});
+		await nats.publish(eventTypes.donationComplete, Buffer.from(JSON.stringify({
+			discordId: metadata.discordId,
+			userId: metadata.userId,
+		})));
 	}
 
 	return response.status(201).end();

@@ -9,7 +9,11 @@
             "code": "registrationRole",
             "name": "Fossil Bot Registered",
             "color": "BLUE"
+        },
+        {
+            "code": "donator",
+            "name": "Donator",
+            "color": "YELLOW"
         }
-
     ]
 }

@@ -5,7 +5,7 @@ const {guildId} = require('../config');
 const {instanceRoles} = require('../deploy-roles');
 module.exports = {
     name: eventTypes.steamLinked,
-    handler: async (client, data) => {
+    handler: async (client, data,) => {
         const guild = await client.guilds.fetch(guildId);
         const user = await guild.members.fetch(data.discordId);
         console.log(instanceRoles)
