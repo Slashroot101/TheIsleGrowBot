@@ -15,11 +15,10 @@ module.exports = {
     },
     async execute(interaction) {
       const amount = interaction.options.get('amount').value;
-      if(amount % 25 !== 0){
-        return interaction.reply('You must donate in amounts of 25 embers due to payment processing restrictions on minimum transaction amounts! Example: 25 embers, 75 embers, etc.');
+      if(amount === 0){
+        return interaction.reply('You have to donate a non-zero amount :^)');
       }
-      const link = await createPaymentLink(amount / 25);
-
+      const link = await createPaymentLink(amount);
       return interaction.reply(`Thank you for considering donating! Here is your donation link for ${amount} fossils: ` + link.url);
     }
 };

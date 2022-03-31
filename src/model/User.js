@@ -28,14 +28,6 @@ User.init(
 			type: DataTypes.ENUM('Y', 'N'),
 			defaultValue: 'N',
 		},
-		emailAddress: {
-			type: DataTypes.STRING,
-			unique: true,
-		},
-		stripeId: {
-			type: DataTypes.STRING,
-			unique: true,
-		},
 	},
 	{
 		paranoid: true,

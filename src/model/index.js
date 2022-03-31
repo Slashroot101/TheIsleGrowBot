@@ -6,6 +6,7 @@ const DinoVault = require('./DinoVault');
 const Command = require('./Command');
 const CommandAudit = require('./CommandAudit');
 const UserCommandBlacklist = require('./UserCommandBlacklist');
+const Donation = require('./Donation');
 
 module.exports = {
 	User,
@@ -16,4 +17,5 @@ module.exports = {
 	Command,
 	CommandAudit,
 	UserCommandBlacklist,
+	Donation,
 };
