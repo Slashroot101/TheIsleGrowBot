@@ -94,7 +94,6 @@ app.get('/', async (request, response) => {
 			}
 
 			let users = await User.findAll({where: {steamId: filteredUsers[0].id}});
-			console.log(users)
 			if(user.steamId !== null || users.length > 0){
 				await nats.publish(eventTypes.steamAlreadyLinked, Buffer.from(JSON.stringify({discordId: userJson.id})));
 				return response.render('index.ejs', { oauthUrl });

@@ -14,7 +14,6 @@ exports.initializeCommands = async () => {
         var filterCommand = storedCommands.filter(x => x.fileName === file);
 
         if(!filterCommand.length){
-            console.log(command.cooldown.hasCooldown)
             const savedCommand = await new Command({
                 fileName: file,
                 name: command.data.name,

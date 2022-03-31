@@ -69,7 +69,6 @@ module.exports = {
         if(user.steamId === null){
             return interaction.reply('You need to link your steam ID first with /link!')
         }
-        console.log(growStatusEnum)
         var growDino = await new GrowDinoRequest({growStatus: growStatusEnum.initialize, cost, initiatedByDiscordId: interaction.user.id, dinoName: dinoData[dinoId].value, UserId: user.id}).save();
 
         exists(`${playerDatabase}/Survival/Players/${user.steamId}.json`, async (exists) => {

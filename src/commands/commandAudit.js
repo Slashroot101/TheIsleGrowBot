@@ -21,9 +21,7 @@ module.exports = {
     const userId = interaction.options.get('id').value;
 
     const commands = await CommandAudit.findAll({where: {'$discordId$': userId}, include: [{model: User, required: true},  Command], order: [['executionTime', 'desc']], limit: 50});
-    console.log()
     const fields = commands.map(x => {return { name: x.Command.name, value: formatRelative(x.dataValues.executionTime, new Date()), inline: true }});
-    console.log(fields);
     const exampleEmbed = new MessageEmbed()
         .setColor('#0099ff')
         .setTitle('Audit Log')

@@ -28,7 +28,6 @@ module.exports = {
         const discordId = interaction.options.get('discordid').value;
         const isApexApproved = interaction.options.get('isapexapproved').value;
         const member = await interaction.guild.members.fetch(discordId);
-        console.log(isApexApproved)
         if(isApexApproved === 'Y'){
             await member.roles.add(instanceRoles.get('apexApproved').id);
         } else {
