@@ -1,6 +1,6 @@
 const fs = require('fs');
 const { Client, Intents, Collection } = require('discord.js');
-const { token, natsUrl, syncDb } = require('./config');
+const { token, natsUrl, syncDb, stripeWebhook } = require('./config');
 const {initializeCommands} = require('./deploy-commands');
 const client = new Client({intents: [Intents.FLAGS.GUILDS]});
 const path = require('path');
@@ -16,6 +16,7 @@ const handleSteamLinkFailure = require('./eventHandlers/handleSteamLinkFailure')
 const handleSteamAlreadyLinked = require('./eventHandlers/handleSteamAlreadyLinked');
 const handleSteamLinkError = require('./eventHandlers/handleSteamLinkError');
 const {subMinutes, formatDistance, addMinutes} = require('date-fns');
+const {createWebhooks} = require('./lib/stripeAccessor');
 
 (async () => {
     const nats = await connect({
@@ -28,6 +29,7 @@ const {subMinutes, formatDistance, addMinutes} = require('date-fns');
     console.log(syncDb)
     await database.dbConnection.sync({force: false});
     await initializeCommands();
+    await createWebhooks(stripeWebhook);
     client.once('ready', async () => {
         await deployRoles(client);
         console.log('ready!');

@@ -20,4 +20,5 @@ module.exports = {
     host: process.env.HOST,
     syncDb: process.env.SYNC_DB,
     stripeSecret: process.env.STRIPE_SECRET,
+    stripeWebhook: process.env.STRIPE_WEBHOOK,
 };
