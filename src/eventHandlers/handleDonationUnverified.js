@@ -5,6 +5,6 @@ const {instanceRoles} = require('../deploy-roles');
 module.exports = {
     name: eventTypes.donationUnverified,
     handler: async (client, data) => {
-
+        
     },
 }

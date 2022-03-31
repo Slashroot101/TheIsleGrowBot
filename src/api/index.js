@@ -3,7 +3,7 @@ const { port, oauthUrl, clientId, clientSecret, natsUrl, host } = require('../co
 const path = require('path');
 const app = express();
 const fetch = require('node-fetch');
-const {User, StripeWebhook, UserBank} = require('../model');
+const {User, StripeWebhook, UserBank, Donation} = require('../model');
 const bodyParser = require('body-parser');
 const eventTypes = require('../eventTypes');
 const {connect} = require('nats');
@@ -14,19 +14,24 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, '/static'));
 
 app.post('/donate', async (request, response ) => {
+	const nats = await connect({
+		url: natsUrl,
+	});
 	const webhook = await StripeWebhook.findAll({where: {status: 'enabled'}});
 	let event;
+	console.log(webhook[0].dataValues.secret)
+	const metadata = request.body.data.object.metadata;
   try {
-    event = stripe.webhooks.constructEvent(request.body, sig, endpointSecret);
+		event = stripe.webhooks.constructEvent(request.body, sig, webhook[0].dataValues.secret);
   }
   catch (err) {
     response.status(400).send(`Webhook Error: ${err.message}`);
   }
 
 	if(request.body.type === 'checkout.session.completed') {
-		var metadata = request.body.data.object.metadata;
 		const userBank = await UserBank.findOne({where: {UserId: metadata.userId}});
 		await UserBank.update({balance: userBank.balance + Number(request.body.data.object.amount_total) / 100}, {where: {UserId: metadata.userId}});
+		await new Donation({fossilsGranted:  Number(request.body.data.object.amount_total) / 100, donationAmount:  Number(request.body.data.object.amount_total) / 100, paymentLinkId: request.body.data.object.id, isVerified: true}).save();
 		await nats.publish(eventTypes.donationComplete, Buffer.from(JSON.stringify({
 			discordId: metadata.discordId,
 			userId: metadata.userId,

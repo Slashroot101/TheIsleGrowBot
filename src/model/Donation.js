@@ -9,7 +9,7 @@ class Donation extends Model {
 
 Donation.init(
   {
-    embersGranted: {
+    fossilsGranted: {
       type: DataTypes.INTEGER,
     },
     donationAmount: {
