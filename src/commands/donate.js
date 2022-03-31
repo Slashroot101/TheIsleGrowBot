@@ -18,7 +18,8 @@ module.exports = {
       if(amount === 0){
         return interaction.reply('You have to donate a non-zero amount :^)');
       }
-      const link = await createPaymentLink(amount);
+      const user = await User.findOne({where: {discordId: interaction.user.id}});
+      const link = await createPaymentLink(amount, user.id, interaction.user.id);
       return interaction.reply(`Thank you for considering donating! Here is your donation link for ${amount} fossils: ` + link.url);
     }
 };

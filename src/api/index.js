@@ -9,6 +9,10 @@ const {connect} = require('nats');
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, '/static'));
 
+app.post('/donate', async (request, response ) => {
+
+});
+
 app.get('/', async (request, response) => {
     const { code } = request.query;
 
@@ -47,7 +51,6 @@ app.get('/', async (request, response) => {
             var userConnectionJson = (await userConnectionResult.json());
 
             var userJson = await userResult.json();
-			console.log(userJson, userConnectionJson)
 			if(userJson.code === 0 || userJson.message?.includes('401') || userConnectionJson.code === 0 || userConnectionJson.message?.includes('401')){
 				await nats.publish(eventTypes.steamLinkError);
 				return response.render('index.ejs', { oauthUrl });
@@ -90,5 +93,7 @@ app.get('/', async (request, response) => {
 
 	return response.render('index.ejs', { oauthUrl });
 });
+
+
 
 app.listen(port, host, () => console.log(`App listening at http://localhost:${port}`));

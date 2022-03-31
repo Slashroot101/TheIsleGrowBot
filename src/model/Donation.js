@@ -17,6 +17,9 @@ Donation.init(
     },
     paymentLinkId: {
       type: DataTypes.STRING,
+    },
+    isVerified: {
+      type: DataTypes.BOOLEAN,
     }
   },
   {

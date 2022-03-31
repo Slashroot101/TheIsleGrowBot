@@ -1,5 +1,6 @@
 const {stripeSecret} = require('../config');
 const stripe = require('stripe')(stripeSecret);
+const {StripeWebhook} = require('../model');
 
 exports.createOrUpdateCustomer = async (stripeId, email, metadata) => {
   let customer;
@@ -15,33 +16,46 @@ exports.createOrUpdateCustomer = async (stripeId, email, metadata) => {
   return customer;
 };
 
-exports.createPaymentLink = async (quantity) => {
+exports.createPaymentLink = async (quantity, userId, discordId) => {
   const fossilProductId = await this.getFossilPrice();
-  console.log(fossilProductId.id)
   const link = await stripe.paymentLinks.create({
     line_items: [{
       price: fossilProductId.id,
       quantity,
     }],  
+    metadata: {
+      userId,
+      discordId,
+    },
   });
 
   return link;
 };
 
+exports.handleStripeEvent = async () => {
+
+};
 
 exports.createWebhooks = async (webhook) => {
   const webhooks = await stripe.webhookEndpoints.list();
   let webhookFound = false;
+
   for(var endpoint of webhooks.data){
-    if(webhookFound === false && endpoint.url === webhook){ webhookFound = true; continue; };
+    if(webhookFound === false && endpoint.url === webhook){ 
+      webhookFound = true; 
+      continue; 
+    };
 
     if(webhookFound === true && endpoint.url === webhook){
 
       await stripe.webhookEndpoints.del(endpoint.id);
+      await StripeWebhook.destroy({where: {stripeWebhookId: endpoint.id}});
     }
   }
+
   if(!webhookFound){
-    await stripe.webhookEndpoints.create({url: webhook, enabled_events: ['checkout.session.completed']});
+    const returnedWebhook = await stripe.webhookEndpoints.create({url: webhook, enabled_events: ['checkout.session.completed']});
+    await new StripeWebhook({secret: returnedWebhook.secret, url: returnedWebhook.url, status: returnedWebhook.status, stripeWebhookId: returnedWebhook.id}).save();
   }
 };
 

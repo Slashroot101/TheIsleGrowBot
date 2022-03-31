@@ -7,6 +7,7 @@ const Command = require('./Command');
 const CommandAudit = require('./CommandAudit');
 const UserCommandBlacklist = require('./UserCommandBlacklist');
 const Donation = require('./Donation');
+const StripeWebhook = require('./StripeWebhook');
 
 module.exports = {
 	User,
@@ -18,4 +19,5 @@ module.exports = {
 	CommandAudit,
 	UserCommandBlacklist,
 	Donation,
+	StripeWebhook,
 };
