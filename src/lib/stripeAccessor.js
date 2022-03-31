@@ -2,6 +2,8 @@ const {stripeSecret} = require('../config');
 const stripe = require('stripe')(stripeSecret);
 const {StripeWebhook} = require('../model');
 
+exports.stripe = stripe;
+
 exports.createOrUpdateCustomer = async (stripeId, email, metadata) => {
   let customer;
   

@@ -29,7 +29,7 @@ const {createWebhooks} = require('./lib/stripeAccessor');
     console.log(syncDb)
     await database.dbConnection.sync({force: false});
     await initializeCommands();
-    await createWebhooks(stripeWebhook);
+    await createWebhooks(`${stripeWebhook}/donate`);
     client.once('ready', async () => {
         await deployRoles(client);
         console.log('ready!');
