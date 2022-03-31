@@ -22,7 +22,7 @@ module.exports = {
         return interaction.reply('You must provide a valid email!');
       }
       
-      const customer = await createOrUpdateCustomer(user.stripeId, email, {discordId: interaction.user.id, userId: user.id}, interaction.user.username);
+      const customer = await createOrUpdateCustomer(user.stripeId, email, {discordId: interaction.user.id, userId: user.id});
       await User.update({emailAddress: email, stripeId: customer.id}, {where: {id: user.id}});
       return interaction.reply('Your email was succesfully linked!');
     }
