@@ -1,4 +1,4 @@
-const { Sequelize, Model, DataTypes } = require('sequelize');
+const { Model, DataTypes } = require('sequelize');
 const { dbConnection } = require('../database');
 
 class CommandAudit extends Model {

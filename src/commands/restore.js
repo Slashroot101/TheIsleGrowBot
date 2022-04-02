@@ -1,6 +1,5 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { User, DinoVault } = require('../model');
-const { stat, readdir, rm, readFile, read } = require('fs');
 const { playerDatabase } = require('../config');
 const IslePlayerDatabase = require('../lib/IslePlayerDatabase');
 const dinoData = require('./commandData/dino.json');
@@ -72,7 +71,7 @@ module.exports = {
 				}
 			});
 
-			collector.on('end', c => {
+			collector.on('end', () => {
 				if (!isCollectionSuccess) {
 					interaction.followUp('Command timed out. Please run the command again!');
 				}

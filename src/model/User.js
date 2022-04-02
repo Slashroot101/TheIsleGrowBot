@@ -1,9 +1,9 @@
-const { Sequelize, Model, DataTypes } = require('sequelize');
+const { Model, DataTypes } = require('sequelize');
 const { dbConnection } = require('../database');
 
 class User extends Model {
-	static associate(models) {
-	}
+	// eslint-disable-next-line no-empty-function
+	static associate() {}
 }
 
 User.init(

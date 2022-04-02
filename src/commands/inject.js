@@ -41,11 +41,6 @@ module.exports = {
 		cooldownExecutions: 1,
 		cooldownInMinutes: 7200,
 	},
-	cooldown: {
-		hasCooldown: true,
-		cooldownExecutions: 1,
-		cooldownInMinutes: 1,
-	},
 	adminRequired: false,
 	requiresSteamLink: true,
 	async execute(interaction) {
@@ -71,7 +66,7 @@ module.exports = {
 		}
 		const growDino = await new GrowDinoRequest({ growStatus: growStatusEnum.initialize, cost, initiatedByDiscordId: interaction.user.id, dinoName: dinoData[dinoId].value, UserId: user.id }).save();
 
-		exists(`${playerDatabase}/Survival/Players/${user.steamId}.json`, async (exists) => {
+		exists(`${playerDatabase}/Survival/Players/${user.steamId}.json`, async () => {
 			if (exists) {
 				const row = new MessageActionRow()
 					.addComponents(
@@ -110,7 +105,7 @@ module.exports = {
 					}
 				});
 
-				collector.on('end', c => {
+				collector.on('end', () => {
 					if (!isCollectionSuccess) {
 						interaction.followUp('Command timed out. Please run the command again!');
 					}

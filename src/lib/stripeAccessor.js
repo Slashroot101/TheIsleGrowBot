@@ -35,10 +35,6 @@ exports.createPaymentLink = async (quantity, userId, discordId) => {
 	return link;
 };
 
-exports.handleStripeEvent = async () => {
-
-};
-
 exports.createWebhooks = async (webhook) => {
 	const webhooks = await stripe.webhookEndpoints.list();
 	let webhookFound = false;

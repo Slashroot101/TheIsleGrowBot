@@ -28,7 +28,7 @@ module.exports = {
 
 		if (!user) {
 			user = await new User({ discordId }).save();
-			await new UserBank({ balance: 0, UserId: discordid }).save();
+			await new UserBank({ balance: 0, UserId: discordId }).save();
 		}
 
 		await UserBank.update({ balance: amount }, { where: { UserId: user.id } });

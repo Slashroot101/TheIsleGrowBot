@@ -1,4 +1,4 @@
-const { Sequelize, Model, DataTypes } = require('sequelize');
+const { Model, DataTypes } = require('sequelize');
 const { dbConnection } = require('../database');
 
 class UserBank extends Model {
@@ -14,7 +14,7 @@ UserBank.init(
 		},
 		apexBalance: {
 			type: DataTypes.INTEGER,
-		}
+		},
 	},
 	{
 		paranoid: true,

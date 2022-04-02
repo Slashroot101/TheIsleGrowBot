@@ -1,11 +1,9 @@
-const { Sequelize, Model, DataTypes } = require('sequelize');
-const { default: Stripe } = require('stripe');
+const { Model, DataTypes } = require('sequelize');
 const { dbConnection } = require('../database');
 
 class StripeWebhook extends Model {
-	static associate(models) {
-
-	}
+	// eslint-disable-next-line no-empty-function
+	static associate() {}
 }
 
 StripeWebhook.init(

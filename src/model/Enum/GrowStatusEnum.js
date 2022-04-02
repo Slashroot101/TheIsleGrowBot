@@ -1,4 +1,4 @@
-module.exports = growStatusEnum = {
+module.exports = {
 	initialize: 'Initialize',
 	waitingOnUser: 'WaitingOnUser',
 	declined: 'Declined',

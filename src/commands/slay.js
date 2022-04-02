@@ -1,8 +1,7 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const { User, DinoVault } = require('../model');
-const { stat, readdir, rm, readFile, read, exists } = require('fs');
+const { User } = require('../model');
+const { rm, exists } = require('fs');
 const { playerDatabase } = require('../config');
-const dinoData = require('./commandData/dino.json');
 const { MessageActionRow, MessageButton } = require('discord.js');
 
 module.exports = {
@@ -23,7 +22,7 @@ module.exports = {
 			return await interaction.reply('you must link your steam before you can run this command!');
 		}
 
-		exists(`${playerDatabase}/Survival/Players/${user.steamId}.json`, async (exists) => {
+		exists(`${playerDatabase}/Survival/Players/${user.steamId}.json`, async () => {
 			if (exists) {
 				const row = new MessageActionRow()
 					.addComponents(
@@ -44,7 +43,7 @@ module.exports = {
 
 				const collector = interaction.channel.createMessageComponentCollector({ filter, time: 15000 });
 				let isCollectionSuccess = false;
-				collector.on('collect', async i => {
+				collector.on('collect', async () => {
 					isCollectionSuccess = true;
 					rm(`${playerDatabase}/Survival/Players/${user.steamId}.json`, async (err) => {
 						if (err) {
@@ -55,7 +54,7 @@ module.exports = {
 					});
 				});
 
-				collector.on('end', async c => {
+				collector.on('end', async () => {
 					if (!isCollectionSuccess) {
 						await interaction.reply('Command timed out. Please run the command again!');
 					}

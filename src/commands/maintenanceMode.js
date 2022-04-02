@@ -1,6 +1,6 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { Command } = require('../model/');
-const { exportedCommands } = require('../deploy-commands');
+
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('maintenance')

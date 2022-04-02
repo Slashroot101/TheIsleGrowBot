@@ -1,6 +1,6 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { CommandAudit, User, Command } = require('../model');
-const { subMinutes, formatRelative } = require('date-fns');
+const { formatRelative } = require('date-fns');
 const { MessageEmbed } = require('discord.js');
 
 module.exports = {

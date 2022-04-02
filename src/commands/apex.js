@@ -1,6 +1,4 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const { dbConnection } = require('../database');
-const { Op } = require('sequelize');
 const { User } = require('../model');
 const { instanceRoles } = require('../deploy-roles');
 
