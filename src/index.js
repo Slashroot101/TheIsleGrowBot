@@ -1,6 +1,6 @@
 const fs = require('fs');
 const { Client, Intents, Collection } = require('discord.js');
-const { token, natsUrl, syncDb, stripeWebhook } = require('./config');
+const { token, natsUrl, stripeWebhook, syncDb } = require('./config');
 const { initializeCommands } = require('./deploy-commands');
 const client = new Client({ intents: [Intents.FLAGS.GUILDS] });
 const path = require('path');
@@ -22,7 +22,7 @@ const { createWebhooks } = require('./lib/stripeAccessor');
 	Object.keys(Models).forEach((ele) => {
 		Models[ele].associate(Models);
 	});
-	await database.dbConnection.sync({ force: false });
+	await database.dbConnection.sync({ force: syncDb });
 	await initializeCommands();
 	await createWebhooks(`${stripeWebhook}/donate`);
 
