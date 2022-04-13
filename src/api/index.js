@@ -84,7 +84,7 @@ app.get('/', async (request, response) => {
 				return response.render('index.ejs', { oauthUrl });
 			}
 
-            if(!userConnectionJson.length) {
+            if(!userConnectionJson.length && userJson.id) {
 				await nats.publish(eventTypes.steamLinkedFailure, Buffer.from(JSON.stringify({
 					discordId: userJson.id,
 				})));
