@@ -10,7 +10,7 @@ module.exports = {
 				.setDescription('The command name.')
 				.setRequired(true))
 		.addBooleanOption(option => option.setName('ismaintenancemode').setDescription('Should maintenance mode be turned on for the command.').setRequired(true)),
-	adminRequired: false,
+	adminRequired: true,
 	cooldown: {
 		hasCooldown: true,
 		cooldownExecutions: 1,

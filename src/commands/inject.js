@@ -26,7 +26,7 @@ module.exports = {
 		},
 		)
 		.addStringOption(opt => {
-			const options = opt.setName('freedino').setDescription('Dinosaurs that have a cost.');
+			const options = opt.setName('freedino').setDescription('Dinosaurs that do not have a cost.');
 			options.setRequired(false);
 			for (const key in dinoData) {
 				if (dinoData[key].cost !== 0) continue;

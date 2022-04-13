@@ -16,7 +16,7 @@ module.exports = {
 				.setDescription('Whether or not the user is blacklisted.')
 				.setRequired(true),
 		),
-	adminRequired: false,
+	adminRequired: true,
 	cooldown: {
 		hasCooldown: true,
 		cooldownExecutions: 1,

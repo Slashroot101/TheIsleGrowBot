@@ -6,7 +6,7 @@
         "requiresApex": false
     },
     "RexAdultS": {
-        "displayName": "T-Rex",
+        "displayName": "T-Rex Juvenile",
         "value": "RexAdultS",
         "cost": 2500,
         "requiresApex": true
@@ -36,7 +36,7 @@
         "requiresApex": false
     },
     "GigaAdultS": {
-        "displayName": "Giganotosaurus",
+        "displayName": "Giganotosaurus Juvenile",
         "value": "GigaAdultS",
         "cost": 2500,
         "requiresApex": true
@@ -48,7 +48,7 @@
         "requiresApex": false
     },
     "Spino": {
-        "displayName": "Spinosaurus",
+        "displayName": "Spinosaurus Juvenile",
         "value": "Spino",
         "cost": 2500,
         "requiresApex": true

@@ -14,7 +14,7 @@ module.exports = {
 				.setDescription('The value to set the users bank to set.')
 				.setRequired(true),
 		),
-	adminRequired: false,
+	adminRequired: true,
 	cooldown: {
 		hasCooldown: true,
 		cooldownExecutions: 1,

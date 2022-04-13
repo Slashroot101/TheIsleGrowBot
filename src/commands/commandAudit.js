@@ -11,7 +11,7 @@ module.exports = {
 			opt.setName('id')
 				.setDescription('The ID of the steam user that you want to audit!')
 				.setRequired(true)),
-	adminRequired: false,
+	adminRequired: true,
 	cooldown: {
 		hasCooldown: true,
 		cooldownExecutions: 5000,

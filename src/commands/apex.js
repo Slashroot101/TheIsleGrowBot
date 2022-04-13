@@ -16,7 +16,7 @@ module.exports = {
 				.addChoice('Yes', 'Y')
 				.addChoice('No', 'N')
 				.setRequired(true)),
-	adminRequired: false,
+	adminRequired: true,
 	cooldown: {
 		hasCooldown: true,
 		cooldownExecutions: 1,
