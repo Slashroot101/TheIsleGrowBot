@@ -1,6 +1,6 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { User } = require('../model');
-const { oauthUrl } = require('../config');
+const { oauthUrl, host, port } = require('../config');
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('linksteam')
@@ -15,6 +15,6 @@ module.exports = {
 		const users = await User.findAll({ where: { discordId: interaction.user.id } });
 		if (users.length && users[0].steamId !== null) return interaction.reply('A user with your Discord ID or Steam ID is already registered!');
 
-		await interaction.reply(`Visit to authenticate your account: ${oauthUrl}`);
+		await interaction.reply(`Visit to authenticate your account: ${oauthUrl + "&" + encodeURIComponent(`redirect_uri=http://${host}:${port}`)}`);
 	},
 };
