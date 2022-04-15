@@ -5,4 +5,5 @@ module.exports = {
 	steamLinkError: 'steamLinkFailure',
 	donationComplete: 'donationComplete',
 	donationUnverified: 'donationUnverified',
+	playerCount: 'playerCount',
 };

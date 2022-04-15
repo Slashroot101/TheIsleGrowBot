@@ -6,7 +6,7 @@ const handleSteamAlreadyLinked = require('./eventHandlers/handleSteamAlreadyLink
 const handleSteamLinkError = require('./eventHandlers/handleSteamLinkError');
 const handleDonationComplete = require('./eventHandlers/handleDonationComplete');
 const handleDonationUnverified = require('./eventHandlers/handleDonationUnverified');
-
+const handlePlayerCount = require('./eventHandlers/playerCountHandler');
 module.exports = async (nats, client) => {
 	nats.subscribe(eventTypes.steamLinked, {
 		callback: (err, msg) => handleEvent(err, msg, client, handleSteamlink.handler),
@@ -30,5 +30,8 @@ module.exports = async (nats, client) => {
 
 	nats.subscribe(eventTypes.donationUnverified, {
 		callback: (err, msg) => handleEvent(err, msg, client, handleDonationUnverified.handler),
+	});
+	nats.subscribe(eventTypes.playerCount, {
+		callback: (err, msg) => handleEvent(err, msg, client, handlePlayerCount.handler),
 	});
 };

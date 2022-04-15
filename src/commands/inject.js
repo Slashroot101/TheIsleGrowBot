@@ -1,9 +1,10 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { exists } = require('fs');
-const { playerDatabase } = require('../config');
+const { playerDatabase, maxApex } = require('../config');
 const User = require('../model/User');
+const {Op} = require('sequelize');
 const dinoData = require('./commandData/dino.json');
-const { UserBank, GrowDinoRequest } = require('../model');
+const { UserBank, GrowDinoRequest, DinoStats } = require('../model');
 const growStatusEnum = require('../model/Enum/GrowStatusEnum');
 const { MessageActionRow, MessageButton } = require('discord.js');
 const IslePlayerDatabase = require('../lib/IslePlayerDatabase');
@@ -54,6 +55,26 @@ module.exports = {
 		if (user.isApexApproved === 'N' && dinoData[dinoId].requiresApex) {
 			return interaction.reply('You must be apex approved to grow this dino!');
 		}
+
+		if(dinoData[dinoId].requiresApex) {
+			const rexAlias = ['RexAdultS', 'RexSubS', 'RexJuvS'];
+			const gigaAlias = ['GigaAdultS', 'GigaSubS', 'GigaJuvS'];
+			const spinoAlias = ['Spino', 'SpinoJuv'];
+			let filter = [];
+			if(rexAlias.indexOf(dinoId) >= 0) {
+				filter = rexAlias;
+			} else if (gigaAlias.indexOf(dinoId) >= 0) {
+				filter = gigaAlias
+			} else {
+				filter = spinoAlias;
+			}
+			const dinoStats = await DinoStats.findAll({where: { dinoName: {[Op.in]: [...filter]}}});
+			console.log(Number(maxApex));
+			if(dinoStats.map(x => x.dataValues).reduce((a, b) => b.count + a, 0) >= Number(maxApex)){
+				return interaction.reply('There are too many of that apex on the server. Try again when there are not.');
+			}
+		}
+
 		const userBank = await UserBank.findOne({ where: { UserId: user.id } });
 		const cost = dinoData[dinoId].cost;
 
@@ -64,10 +85,11 @@ module.exports = {
 		if (user.steamId === null) {
 			return interaction.reply('You need to link your steam ID first with /link!');
 		}
+
 		const growDino = await new GrowDinoRequest({ growStatus: growStatusEnum.initialize, cost, initiatedByDiscordId: interaction.user.id, dinoName: dinoData[dinoId].value, UserId: user.id }).save();
 
-		exists(`${playerDatabase}/Survival/Players/${user.steamId}.json`, async () => {
-			if (exists) {
+		exists(`${playerDatabase}/Survival/Players/${user.steamId}.json`, async (dinoExists) => {
+			if (dinoExists) {
 				const row = new MessageActionRow()
 					.addComponents(
 						new MessageButton()
@@ -107,20 +129,19 @@ module.exports = {
 
 				collector.on('end', () => {
 					if (!isCollectionSuccess) {
-						interaction.followUp('Command timed out. Please run the command again!');
+						interaction.reply('Command timed out. Please run the command again!');
 					}
 				});
-			}
-			else {
+			} else {
 				await writeNewDino(interaction, user, userBank, dinoId, cost);
-				await interaction.followUp('Your grow has been processed!');
+				await interaction.reply('Your grow has been processed!');
 			}
 		});
 	},
 };
 
 async function updateDinoFile(interaction, user, userBank, dinoId, cost) {
-	const userSave = playerDataBaseAccessor.getPlayerSave(user.steamId);
+	const userSave = await playerDataBaseAccessor.getPlayerSave(user.steamId);
 	const json = JSON.parse(userSave);
 	json.CharacterClass = dinoId;
 	await playerDataBaseAccessor.writePlayerSave(user.steamId, JSON.stringify(json));

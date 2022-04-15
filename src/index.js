@@ -22,7 +22,7 @@ const { createWebhooks } = require('./lib/stripeAccessor');
 	Object.keys(Models).forEach((ele) => {
 		Models[ele].associate(Models);
 	});
-	await database.dbConnection.sync({ force: syncDb });
+	await database.dbConnection.sync({ force: false });
 	await initializeCommands();
 	await createWebhooks(`${stripeWebhook}/donate`);
 

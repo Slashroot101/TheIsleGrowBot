@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "scraper": "cross-env NODE_ENV=dev node src/scraper/index.js",
     "start": "cross-env NODE_ENV=dev node src/index.js",
     "dev": "cross-env NODE_ENV=dev node src/index.js",
     "api": "cross-env NODE_ENV=dev node src/api/index.js",

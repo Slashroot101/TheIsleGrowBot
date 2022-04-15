@@ -16,7 +16,7 @@ module.exports = {
 		const user = await User.findOne({ where: { discordId: interaction.user.id } });
 		let bank = await UserBank.findOne({ where: { UserId: user.id } });
 		if (!bank) {
-			bank = await new UserBank({ UserId: user.id, balance: 0 });
+			bank = await new UserBank({ UserId: user.id, balance: 0 }).save();
 		}
 		interaction.reply(`You have ${bank.balance == null ? 0 : bank.balance} fossils!`);
 	},
