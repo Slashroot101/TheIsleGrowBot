@@ -45,7 +45,7 @@ module.exports = {
 	adminRequired: false,
 	requiresSteamLink: true,
 	async execute(interaction) {
-		const dinoId = interaction.options.get('dino')?.value || interaction.options.get('freedino').value;
+		const dinoId = interaction.options.get('dino')?.value || interaction.options.get('freedino').value || null;
 		const user = await User.findOne({ where: { discordId: interaction.user.id } });
 
 		if (user.steamId === null) {
@@ -54,6 +54,10 @@ module.exports = {
 
 		if (user.isApexApproved === 'N' && dinoData[dinoId].requiresApex) {
 			return interaction.reply('You must be apex approved to grow this dino!');
+		}
+
+		if(!dinoId) {
+			return interaction.reply('You must supply a dino to grow!');
 		}
 
 		if(dinoData[dinoId].requiresApex) {
@@ -69,7 +73,6 @@ module.exports = {
 				filter = spinoAlias;
 			}
 			const dinoStats = await DinoStats.findAll({where: { dinoName: {[Op.in]: [...filter]}}});
-			console.log(Number(maxApex));
 			if(dinoStats.map(x => x.dataValues).reduce((a, b) => b.count + a, 0) >= Number(maxApex)){
 				return interaction.reply('There are too many of that apex on the server. Try again when there are not.');
 			}

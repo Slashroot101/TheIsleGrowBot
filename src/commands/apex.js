@@ -6,7 +6,7 @@ module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('apex')
 		.setDescription('Promotes the user to be able to use apex dinosaurs!')
-		.addStringOption(opt =>
+		.addMentionableOption(opt =>
 			opt.setName('discordid')
 				.setDescription('The ID of your discord account.')
 				.setRequired(true))

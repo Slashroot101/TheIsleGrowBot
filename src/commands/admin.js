@@ -4,7 +4,7 @@ module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('promote')
 		.setDescription('Promotes the user to admin!')
-		.addStringOption(opt =>
+		.addMentionableOption(opt =>
 			opt.setName('id')
 				.setDescription('The ID of the steam user to promote.')
 				.setRequired(true))
