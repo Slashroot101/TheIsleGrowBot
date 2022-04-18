@@ -1,4 +1,5 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
+const logger = require('../lib/logger');
 const User = require('../model/User');
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -26,9 +27,11 @@ module.exports = {
 		const userId = interaction.options.get('id').value;
 		const user = await User.findOne({ where: { discordId: userId } });
 		if (!user) {
+			logger.info(`User [discordId=${interaction.user.id}] executed ${interaction.commandName}, but target user [userId=${userId}] did not exist`);
 			await new User({ discordId: userId }).save();
 		}
 
+		logger.info(`User [discordI=${interaction.user.id}] executed ${interaction.commandName} and promoted [userId=${userId}] to admin === ${isPromoted}`);
 		await User.update({ isAdmin: isPromoted }, { where: { discordId: userId } });
 		interaction.reply(`The user has been ${isPromoted === 'Y' ? 'promoted' : 'demoted'}!`);
 	},

@@ -1,5 +1,6 @@
 const eventTypes = require('../eventTypes');
 const {replyChannel} = require('../config');
+const logger = require('../lib/logger');
 
 module.exports = {
     name: eventTypes.steamLinkError,

@@ -4,6 +4,7 @@ const { clientId, token, guildId } = require('./config');
 const fs = require('fs');
 const path = require('path');
 const { Command } = require('./model');
+const logger = require('./lib/logger');
 
 exports.initializeCommands = async () => {
 	const commands = [];
@@ -14,6 +15,7 @@ exports.initializeCommands = async () => {
 		const filterCommand = storedCommands.filter(x => x.fileName === file);
 
 		if (!filterCommand.length) {
+			logger.info(`Command [commandId=${savedCommand.id}] was added to the database. Proceeding!`)
 			const savedCommand = await new Command({
 				fileName: file,
 				name: command.data.name,
@@ -41,6 +43,7 @@ exports.initializeCommands = async () => {
 			}, { where: { id: filterCommand[0].id } });
 			command.id = filterCommand[0].id;
 			command.isMaintenanceModeEnabled = filterCommand[0].isMaintenanceModeEnabled;
+			logger.info(`Command [commandId=${command.id}] was already saved to the database. Adding to array and proceeding!`);
 		}
 
 		commands.push(command.data.toJSON());
@@ -49,7 +52,7 @@ exports.initializeCommands = async () => {
 	const rest = new REST({ version: '9' }).setToken(token);
 
 	rest.put(Routes.applicationGuildCommands(clientId, guildId), { body: commands })
-		.then(() => console.log('Successfully registered application commands.'))
-		.catch(console.error);
+		.then(() => logger.info('Succesfully registered commands!'))
+		.catch(logger.error);
 };
 
