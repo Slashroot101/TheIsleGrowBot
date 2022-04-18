@@ -1,4 +1,5 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
+const logger = require('../lib/logger');
 const { UserBank } = require('../model');
 const User = require('../model/User');
 module.exports = {
@@ -27,12 +28,13 @@ module.exports = {
 		let user = await User.findOne({ where: { discordId } });
 
 		if (!user) {
+			logger.info(`Executing ${interaction.commandName} tried to find user [userId=${userId}] but could not find, creating`);
 			user = await new User({ discordId }).save();
 			await new UserBank({ balance: 0, UserId: discordId }).save();
 		}
 
 		await UserBank.update({ balance: amount }, { where: { UserId: user.id } });
-
+		logger.info(`Executing ${interaction.commandName} had their balance updated to ${amount} by admin user [userId=${interaction.user.id}]`);
 		await interaction.reply('Updated the user\'s balance!');
 	},
 };

@@ -1,4 +1,5 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
+const logger = require('../lib/logger');
 const { Command } = require('../model/');
 
 module.exports = {
@@ -22,8 +23,10 @@ module.exports = {
 		const command = await Command.findOne({ where: { name: commandName } });
 
 		if (!command) {
+			logger.info(`Executing ${interaction.commandName} for user [userId=${interaction.user.id}] but the command ${commandName} was not found in the system, neglecting`);
 			return interaction.reply('That command does not exist!');
 		}
+		logger.info(`Executing ${interaction.commandName} for user [userId=${interaction.user.id}] and turning maintenanceMode to ${bool}`)
 		require(`./${commandName}.js`).isMaintenanceModeEnabled = bool;
 		await Command.update({ isMaintenanceModeEnabled: bool }, { where: { id: command.id } });
 		await interaction.reply(`Updated ${command.name} to maintenance mode ${bool}`);

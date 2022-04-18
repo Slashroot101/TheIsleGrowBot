@@ -29,6 +29,7 @@ module.exports = {
 			logger.info(`User bank [userId=${mentionedUser}] not found while executing ${interaction.commandName}`)
 			bank = await new UserBank({ UserId: user.id, balance: amount }).save();
 		} else {
+			logger.info(`User bank [userId=${mentionedUser}] was incremeneted by admin user [userId=${interaction.user.id}]`);
       bank = await UserBank.update({balance: bank.balance + amount}, {where: {UserId: user.id}});
     }
 		interaction.reply(`Succesfully granted ${bank.balance == null ? 0 : bank.balance} fossils!`);

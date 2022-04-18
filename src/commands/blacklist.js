@@ -1,4 +1,5 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
+const logger = require('../lib/logger');
 const { User } = require('../model');
 
 module.exports = {
@@ -27,6 +28,7 @@ module.exports = {
 		const userId = interaction.options.get('id').value;
 		const user = await User.findOne({ where: { discordId: userId } });
 		if (!user) {
+			logger.info(`Executing ${interaction.commandName} targeting [userId=${user.id}] but no user was found, creating`);
 			await new User({ discordId: userId }).save();
 		}
 

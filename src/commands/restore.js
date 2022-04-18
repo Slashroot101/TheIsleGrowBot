@@ -4,6 +4,7 @@ const { playerDatabase } = require('../config');
 const IslePlayerDatabase = require('../lib/IslePlayerDatabase');
 const dinoData = require('./commandData/dino.json');
 const { MessageActionRow, MessageButton } = require('discord.js');
+const logger = require('../lib/logger');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -24,6 +25,7 @@ module.exports = {
 		const user = await User.findOne({ where: { discordId: interaction.user.id } });
 
 		if (user.steamId === null) {
+			logger.info(`Executing ${interaction.commandName} for user [userId=${user.discordId}] but their steam was not linked, neglecting`);
 			return interaction.reply('You must have linked your steam ID before you can use the grow command!');
 		}
 
@@ -32,6 +34,7 @@ module.exports = {
 		const vaultedDino = await DinoVault.findOne({ where: { id: interaction.options.get('id').value } });
 
 		if (!vaultedDino) {
+			logger.info(`Executing ${interaction.commandName} for user [userId=${user.discordId}] but there was no dino vaulted with the provided ID`);
 			return interaction.reply('No dino was found vaulted with that ID. Please try again with a valid ID');
 		}
 
@@ -64,15 +67,18 @@ module.exports = {
 					await new DinoVault({ dinoDisplayName: dinoData[dinoJson['CharacterClass']].displayName, savedName: 'auto-vaulted', dinoJson: JSON.stringify(playerSave) }).save();
 					await playerDatabaseInstance.writePlayerSave(user.steamId, vaultedDino.dinoJson);
 					await DinoVault.destroy({ where: { id: vaultedDino.id } });
+					logger.info(`Executing ${interaction.commandName} for user [userId=${user.discordId}] succesfully`)
 					return interaction.followUp('Your dino was succesfully restored!');
 				}
 				else if (i.customid === 'DinoGrowDeny') {
+					logger.info(`Executing ${interaction.commandName} for user [userId=${user.discordId}] but the user denied it.`);
 					return interaction.reply('You denied your restore. Revaulting the dino');
 				}
 			});
 
 			collector.on('end', () => {
 				if (!isCollectionSuccess) {
+					logger.info(`Executing ${interaction.commandName} for user [userId=${user.discordId}] but the command timed out`);
 					interaction.followUp('Command timed out. Please run the command again!');
 				}
 			});

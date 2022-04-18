@@ -2,6 +2,7 @@ const { SlashCommandBuilder } = require('@discordjs/builders');
 const { CommandAudit, User, Command } = require('../model');
 const { formatRelative } = require('date-fns');
 const { MessageEmbed } = require('discord.js');
+const logger = require('../lib/logger');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -31,7 +32,7 @@ module.exports = {
 				fields,
 			)
 			.setTimestamp();
-
+		logger.info(`Executing ${interaction.commandName} for user [userId=${userId}] by admin user [userId=${interaction.user.id}]`);
 		return interaction.reply({ embeds: [exampleEmbed] });
 	},
 };

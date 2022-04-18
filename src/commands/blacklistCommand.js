@@ -1,4 +1,5 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
+const logger = require('../lib/logger');
 const { User, Command, UserCommandBlacklist } = require('../model');
 
 module.exports = {
@@ -29,18 +30,22 @@ module.exports = {
 
 		const savedCommand = await Command.findOne({ where: { name: command } });
 		if (!savedCommand) {
+			logger.info(`Executing command ${interaction.commandName} and tried to pass in command value ${command}, which does not exist, neglecting`);
 			return interaction.reply('The command you provided does not exist!');
 		}
 
 		const savedUser = await User.findOne({ where: { discordId: user } });
 		if (!savedUser) {
+			logger.info(`Executing command ${interaction.commandName} on target user [userId=${user}] by admin user [userId=${interaction.user.id}] but user did not exist, creating`);
 			await new User({ discordId: user }).save();
 		}
 
 		if (isblacklisted) {
+			logger.info(`Executing command ${interaction.commandName} on target user [userId=${user}] by admin user [userId=${interaction.user.id}], blacklisting`);
 			await new UserCommandBlacklist({ isBlackListed: true, CommandId: savedCommand.id, UserId: savedUser.id }).save();
 		}
 		else {
+			logger.info(`Executing command ${interaction.commandName} on target user [userId=${user}] by admin user [userId=${interaction.user.id}], unblacklisting`);
 			await UserCommandBlacklist.destroy({ where: { CommandId: savedCommand.id, UserId: savedUser.id } });
 		}
 

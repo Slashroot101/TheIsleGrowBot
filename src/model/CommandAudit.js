@@ -16,6 +16,9 @@ CommandAudit.init(
 		cost: {
 			type: DataTypes.INTEGER,
 		},
+		params: {
+			type: DataTypes.STRING,
+		}
 	},
 	{
 		paranoid: true,

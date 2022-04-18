@@ -50,14 +50,17 @@ module.exports = {
 		const user = await User.findOne({ where: { discordId: interaction.user.id } });
 
 		if (user.steamId === null) {
+			logger.info(`Executing ${interaction.commandName} for user [userId=${user.discordId}] but the user did not have steam linked`);
 			return interaction.reply('You must have linked your steam ID before you can use the grow command!');
 		}
 
 		if (user.isApexApproved === 'N' && dinoData[dinoId].requiresApex) {
+			logger.info(`Executing ${interaction.commandName} for user [userId=${user.discordId}] but the user was not apex approved`)
 			return interaction.reply('You must be apex approved to grow this dino!');
 		}
 
 		if(!dinoId) {
+			logger.info(`Executing ${interaction.commandName} for user [userId=${user.discordId}] but the user did not supply a dino`);
 			return interaction.reply('You must supply a dino to grow!');
 		}
 

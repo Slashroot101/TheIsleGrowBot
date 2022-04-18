@@ -37,13 +37,13 @@ const logger = require('./lib/logger');
 		if (!interaction.isCommand()) return;
 		let user = await User.findOne({ where: { discordId: interaction.user.id } });
 		if (!user) {
-			logger.info(`User [discordId=${user.id}] was not found in the database, creating.`);
+			logger.info(`User [discordId=${interaction.user.id}] was not found in the database, creating.`);
 			user = await new User({ discordId: interaction.user.id }).save();
 			await new Models.UserBank({ UserId: user.id, balance: 0 }).save();
 		}
 
 		if (user.isBlacklisted === 'Y') {
-			logger.info(`User [discordId=${user.id}] was blacklisted, neglecting.`);
+			logger.info(`User [discordId=${interaction.user.id}] was blacklisted, neglecting.`);
 			return interaction.reply('You cannot use commands! You are blacklisted!');
 		}
 
@@ -97,6 +97,7 @@ const logger = require('./lib/logger');
 
 	for (const file of commandFiles) {
 		const command = require(path.resolve(__dirname, `./commands/${file}`));
+		logger.info(`Loading ${command.data.name}`);
 		client.commands.set(command.data.name, command);
 	}
 

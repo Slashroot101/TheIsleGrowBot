@@ -1,6 +1,7 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { User } = require('../model');
 const { createPaymentLink } = require('../lib/stripeAccessor');
+const logger = require('../lib/logger');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -20,6 +21,7 @@ module.exports = {
 		}
 		const user = await User.findOne({ where: { discordId: interaction.user.id } });
 		const link = await createPaymentLink(amount, user.id, interaction.user.id);
+		logger.info(`Executing ${interaction.commandName} for user to purchase ${amount} fossils`);
 		return interaction.reply(`Thank you for considering donating! Here is your donation link for ${amount} fossils: ` + link.url);
 	},
 };

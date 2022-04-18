@@ -15,7 +15,6 @@ exports.initializeCommands = async () => {
 		const filterCommand = storedCommands.filter(x => x.fileName === file);
 
 		if (!filterCommand.length) {
-			logger.info(`Command [commandId=${savedCommand.id}] was added to the database. Proceeding!`)
 			const savedCommand = await new Command({
 				fileName: file,
 				name: command.data.name,
@@ -27,6 +26,7 @@ exports.initializeCommands = async () => {
 				requiresSteamLink: command.requiresSteamLink === null ? false : true,
 				isMaintenanceModeEnabled: false,
 			}).save();
+			logger.info(`Command [commandId=${savedCommand.id}] was added to the database. Proceeding!`)
 			command.id = savedCommand.id;
 		}
 		else {
