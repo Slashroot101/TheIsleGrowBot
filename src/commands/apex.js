@@ -1,6 +1,7 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { User } = require('../model');
 const { instanceRoles } = require('../deploy-roles');
+const logger = require('../lib/logger');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -27,9 +28,11 @@ module.exports = {
 		const isApexApproved = interaction.options.get('isapexapproved').value;
 		const member = await interaction.guild.members.fetch(discordId);
 		if (isApexApproved === 'Y') {
+			logger.info(`Adding apex approval to user [userId=${discordId}] by user [userId=${interaction.user.id}]`);
 			await member.roles.add(instanceRoles.get('apexApproved').id);
 		}
 		else {
+			logger.info(`Removing apex approval from user [userId=${discordId}] by user [userId=${interaction.user.id}]`);
 			await member.roles.remove(instanceRoles.get('apexApproved').id);
 		}
 		await User.update({ isApexApproved }, { where: { discordId } });

@@ -1,4 +1,5 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
+const logger = require('../lib/logger');
 const { User } = require('../model');
 const UserBank = require('../model/UserBank');
 
@@ -19,11 +20,13 @@ module.exports = {
     const amount = interaction.options.get('amount').value;
 		let user = await User.findOne({ where: { discordId: mentionedUser } });
     if(!user) {
+			logger.info(`User [userId=${mentionedUser}] not found while executing ${interaction.commandName}`)
       user = await new User({discordId: mentionedUser}).save();
     }
 		let bank = await UserBank.findOne({ where: { UserId: user.id } });
     console.log(bank)
 		if (!bank) {
+			logger.info(`User bank [userId=${mentionedUser}] not found while executing ${interaction.commandName}`)
 			bank = await new UserBank({ UserId: user.id, balance: amount }).save();
 		} else {
       bank = await UserBank.update({balance: bank.balance + amount}, {where: {UserId: user.id}});

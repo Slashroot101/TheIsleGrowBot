@@ -8,7 +8,6 @@ module.exports = {
       if(subMinutes(new Date(), data.sentDate) > scrapeInterval){
         return;
       }
-      logger.info(`Received event ${eventTypes.playerCount} with ${data.numOnline} players`);
       await client.user.setActivity(`Dinosaurs Online: ${data.numOnline}`);
     },
 }
