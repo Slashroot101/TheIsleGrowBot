@@ -9,6 +9,7 @@ const growStatusEnum = require('../model/Enum/GrowStatusEnum');
 const { MessageActionRow, MessageButton } = require('discord.js');
 const IslePlayerDatabase = require('../lib/IslePlayerDatabase');
 const DinoFactory = require('../lib/DinoFactory');
+const logger = require('../lib/logger');
 const playerDataBaseAccessor = new IslePlayerDatabase(process.env.playerDatabase);
 
 module.exports = {
@@ -73,7 +74,9 @@ module.exports = {
 				filter = spinoAlias;
 			}
 			const dinoStats = await DinoStats.findAll({where: { dinoName: {[Op.in]: [...filter]}}});
-			if(dinoStats.map(x => x.dataValues).reduce((a, b) => b.count + a, 0) >= Number(maxApex)){
+			const numDinos = dinoStats.map(x => x.dataValues).reduce((a, b) => b.count + a, 0);
+			if(numDinos >= Number(maxApex)){
+				logger.info(`User [discordId=${interaction.user.id}] tried to grow [dinoId=${dinoId}] but there were already more than ${numDinos}/${maxApex} apex`);
 				return interaction.reply('There are too many of that apex on the server. Try again when there are not.');
 			}
 		}
@@ -82,10 +85,12 @@ module.exports = {
 		const cost = dinoData[dinoId].cost;
 
 		if (cost !== 0 && userBank === null || userBank.balance == null || userBank.balance - cost < 0) {
+			logger.info(`User [discordId=${interaction.user.id}] tried to grow [dinoId=${dinoId}] but only had ${userbank.balance} fossils`);
 			return interaction.reply('You do not have enough fossils to afford that!');
 		}
 
 		if (user.steamId === null) {
+			logger.info(`User [discordId=${interaction.user.id}] tried to grow [dinoId=${dinoId}] but did not have steam linked`);
 			return interaction.reply('You need to link your steam ID first with /link!');
 		}
 
@@ -115,6 +120,7 @@ module.exports = {
 				let isCollectionSuccess = false;
 				collector.on('collect', async i => {
 					if (i.customId === 'DinoGrowAccept') {
+						logger.info(`User [discordId=${interaction.user.id}] accepted to grow [dinoId=${dinoId}] and slay the existing dino`);
 						isCollectionSuccess = true;
 						collector.stop();
 						await GrowDinoRequest.update({ growStatus: growStatusEnum.processing }, { where: { id: growDino.id } });
@@ -123,6 +129,7 @@ module.exports = {
 						await i.reply('Your grow has been processed!');
 					}
 					else if (i.customId === 'DinoGrowDeny') {
+						logger.info(`User [discordId=${interaction.user.id}] denied growing [dinoId=${dinoId}] due to existing dino`);
 						isCollectionSuccess = true;
 						collector.stop();
 						await GrowDinoRequest.update({ growStatus: growStatusEnum.declined }, { where: { id: growDino.id } });
@@ -136,6 +143,7 @@ module.exports = {
 					}
 				});
 			} else {
+				logger.info(`User [discordId=${interaction.user.id}] has requested to grow [dinoId=${dinoId}] with no existing dino`);
 				await writeNewDino(interaction, user, userBank, dinoId, cost);
 				await interaction.reply('Your grow has been processed!');
 			}

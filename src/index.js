@@ -13,6 +13,7 @@ const Models = require('./model');
 const queueSubscriptions = require('./queueSubscriptions');
 const { subMinutes, formatDistance, addMinutes } = require('date-fns');
 const { createWebhooks } = require('./lib/stripeAccessor');
+const logger = require('./lib/logger');
 
 (async () => {
 	const nats = await connect({
@@ -36,11 +37,13 @@ const { createWebhooks } = require('./lib/stripeAccessor');
 		if (!interaction.isCommand()) return;
 		let user = await User.findOne({ where: { discordId: interaction.user.id } });
 		if (!user) {
+			logger.info(`User [discordId=${user.id}] was not found in the database, creating.`);
 			user = await new User({ discordId: interaction.user.id }).save();
 			await new Models.UserBank({ UserId: user.id, balance: 0 }).save();
 		}
 
 		if (user.isBlacklisted === 'Y') {
+			logger.info(`User [discordId=${user.id}] was blacklisted, neglecting.`);
 			return interaction.reply('You cannot use commands! You are blacklisted!');
 		}
 
@@ -51,10 +54,12 @@ const { createWebhooks } = require('./lib/stripeAccessor');
 		const commandBlacklist = await UserCommandBlacklist.findAll({ where: { UserId: user.id, CommandId: command.id } });
 
 		if (commandBlacklist.length) {
+			logger.info(`User [discordId=${user.id}] was blacklisted from the command ${interaction.commandName}, neglecting`);
 			return interaction.reply('You are blacklisted from that command! Reach out to an admin if you think that is a mistake');
 		}
 
 		if (savedCommand.isMaintenanceModeEnabled) {
+			logger.info(`User [discordId=${user.id}] tried to run ${interaction.commandName} but it was in maintenance mode, neglecting`);
 			return interaction.reply(`${savedCommand.name} is currently in maintenance mode! Please try again later, or contact an admin.`);
 		}
 
@@ -62,15 +67,18 @@ const { createWebhooks } = require('./lib/stripeAccessor');
 			const commandRange = subMinutes(new Date(), command.cooldown.cooldownInMinutes);
 			const commandExecutions = await CommandAudit.findAll({ where: { UserId: user.id, executionTime: { [Op.gt]: commandRange }, CommandId: command.id }, order: [['executionTime', 'desc']] });
 			if (commandExecutions.length >= command.cooldown.cooldownExecutions) {
+				logger.info(`User [discordId=${user.id}] tried to run ${interaction.commandName} but the command was on cooldown, neglecting`);
 				const commandNextDate = addMinutes(new Date(commandExecutions[0].executionTime), command.cooldown.cooldownInMinutes);
 				return interaction.reply(`This command is on cooldown for you for ${formatDistance(commandNextDate, new Date())}`);
 			}
 		}
 		if (command.adminRequired && user.dataValues.isAdmin === 'N' || user.dataValues.isAdmin === null) {
+			logger.info(`User [discordId=${user.id}] tried to run ${interaction.commandName} but the command required admin which they did not have, neglecting`)
 			return interaction.reply('You must be an admin to use that command!');
 		}
 
 		if (command.requiresSteamLink !== undefined && command.requiresSteamLink === true && !user.steamId) {
+			logger.info(`User [discordId=${user.id}] tried to run ${interaction.commandName} but the command required steam to be linked, neglecting`);
 			return interaction.reply('Your steam must be linked to run this command!');
 		}
 
