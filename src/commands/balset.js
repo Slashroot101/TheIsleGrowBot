@@ -24,7 +24,6 @@ module.exports = {
       user = await new User({discordId: mentionedUser}).save();
     }
 		let bank = await UserBank.findOne({ where: { UserId: user.id } });
-    console.log(bank)
 		if (!bank) {
 			logger.info(`User bank [userId=${mentionedUser}] not found while executing ${interaction.commandName}`)
 			bank = await new UserBank({ UserId: user.id, balance: amount }).save();

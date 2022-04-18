@@ -4,11 +4,13 @@ const eventTypes = require('../eventTypes');
 const {readdir, stat, readFile} = require('fs').promises;
 const {connect} = require('nats');
 const {subMinutes} = require('date-fns');
+const logger = require('../lib/logger');
 (async () => {
   const nats = await connect({
     url: natsUrl,
   });
   setInterval(async () => {
+    logger.info(`Beginning scraper loop`);
     const dinoMap = new Map();
     const files = await (await readdir(`${playerDatabase}/Survival/Players/`)).filter(x => x.endsWith('.json'));
     let numOnline = 0;
@@ -32,6 +34,7 @@ const {subMinutes} = require('date-fns');
       const [dinoName, count] = dino;
       dinoArray.push({dinoName, count})
     }
+    logger.info(`Publishing player count for number of players online: ${numOnline}`);
     nats.publish(eventTypes.playerCount, Buffer.from(JSON.stringify({numOnline, sentDate: new Date()})));
     await DinoStats.bulkCreate(dinoArray, {
       updateOnDuplicate: ['dinoName', 'count'],

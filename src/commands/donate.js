@@ -6,7 +6,7 @@ const logger = require('../lib/logger');
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('donate')
-		.addIntegerOption(opt => opt.setName('amount').setDescription('How many fossils you would like to donate for'))
+		.addIntegerOption(opt => opt.setName('amount').setDescription('How many fossils you would like to donate for').setRequired(true))
 		.setDescription('Creates a payment link for you to buy fossils from'),
 	adminRequired: false,
 	cooldown: {

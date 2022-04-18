@@ -30,7 +30,7 @@ const logger = require('./lib/logger');
 	client.once('ready', async () => {
 		await deployRoles(client);
 		await queueSubscriptions(nats, client);
-		console.log('ready!');
+		logger.info(`Bot ready!`);
 	});
 
 	client.on('interactionCreate', async interaction => {
