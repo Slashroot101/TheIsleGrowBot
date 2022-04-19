@@ -1,4 +1,7 @@
+const logger = require('../lib/logger');
+
 module.exports = class DinoFactory {
+	dinoObject = {};
 	constructor() {
 		this.dinoObject = {
 			'CharacterClass': null,
@@ -181,6 +184,7 @@ module.exports = class DinoFactory {
 	}
 
 	render() {
+		logger.info(this.dinoObject);
 		return JSON.stringify(this.dinoObject);
 	}
 };
