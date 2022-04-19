@@ -155,10 +155,31 @@ module.exports = {
 };
 
 async function updateDinoFile(interaction, user, userBank, dinoId, cost) {
-	const userSave = await playerDataBaseAccessor.getPlayerSave(user.steamId);
-	const json = JSON.parse(userSave);
-	json.CharacterClass = dinoId;
-	await playerDataBaseAccessor.writePlayerSave(user.steamId, json);
+	const newFile = new DinoFactory()
+		.setCharacterClass(dinoId)
+		.setCharacterPosition("X=466765.250 Y=121168.438 Z=-46759.008")
+		.setCharacterRotation("P=0.000000 Y=109.426399 R=0.000000")
+		.setCharacterThirst(31)
+		.setCharacterStamina(182)
+		.setCharacterGrowth(1.000000)
+		.setCharacterHealth(1500)
+		.setCharacterHunger(1.000000)
+		.setCharacterBrokenLegs(false)
+		.setCharacterGender(false)
+		.setCharacterResting(false)
+		.setCharacterProgressionPoints(2)
+		.setCharacterProgressionTier(2)
+		.setCharacterCamerRotation("P=0.000000 Y=-160.573532 R=0.000000")
+		.setCharacterCameraDistance("250.012924")
+		.setCharacterSkinPaletteSectionSix(254)
+		.setCharacterSkinPaletteSectionFive(28)
+		.setCharacterSkinPaletteSectionFour(12)
+		.setCharacterSkinPaletteSectionThree(22)
+		.setCharacterSkinPaletteSectionTwo(8)
+		.setCharacterSkinPaletteSectionOne(25)
+		.setCharacterSkinPaletteVariation("6.0")
+		.render();
+	await playerDataBaseAccessor.writePlayerSave(user.steamId, newFile);
 	await userBank.update({ where: { UserId: user.id } }, { balance: userBank.balance - cost });
 }
 
@@ -187,6 +208,8 @@ async function writeNewDino(interaction, user, userBank, dinoId, cost) {
 		.setCharacterSkinPaletteSectionOne(25)
 		.setCharacterSkinPaletteVariation("6.0")
 		.render();
+
+	console.log(newFile)
 
 	await playerDataBaseAccessor.writePlayerSave(user.steamId, newFile);
 	await userBank.update({ where: { UserId: user.id } }, { balance: userBank.balance - cost });
