@@ -35,7 +35,7 @@ module.exports = class DinoFactory {
 
 	setCharacterClass(dinoClass) {
 		if (dinoClass === null) return this;
-		this.dinoObject['characterClass'] = dinoClass;
+		this.dinoObject['CharacterClass'] = dinoClass;
 		return this;
 	}
 
