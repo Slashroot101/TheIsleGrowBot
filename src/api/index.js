@@ -19,7 +19,7 @@ app.set('views', path.join(__dirname, '/static'));
 	try {
 		await createWebhooks(`${stripeWebhook}/donate`);
 	} catch (err) {
-		logger.err(err);
+		logger.error(err);
 	}
 
 	app.post('/donate', async (request, response ) => {
