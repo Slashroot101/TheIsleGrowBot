@@ -3,7 +3,7 @@ const {DinoStats} = require('../model');
 const eventTypes = require('../eventTypes');
 const {readdir, stat, readFile} = require('fs').promises;
 const {connect} = require('nats');
-const {subMinutes} = require('date-fns');
+const {differenceInMinutes} = require('date-fns');
 const logger = require('../lib/logger');
 (async () => {
   const nats = await connect({
@@ -17,7 +17,7 @@ const logger = require('../lib/logger');
     for(const file of files){
       const playerFile = `${playerDatabase}/Survival/Players/${file}`;
       const stats = await stat(playerFile);
-      if (subMinutes(new Date().getTime(), stats.mtime.getTime()) <= 10) {
+      if (differenceInMinutes(new Date().getTime(), stats.mtime.getTime()) <= 10) {
         numOnline++;
       }
 
