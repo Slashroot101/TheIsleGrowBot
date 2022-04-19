@@ -158,7 +158,7 @@ async function updateDinoFile(interaction, user, userBank, dinoId, cost) {
 	const userSave = await playerDataBaseAccessor.getPlayerSave(user.steamId);
 	const json = JSON.parse(userSave);
 	json.CharacterClass = dinoId;
-	await playerDataBaseAccessor.writePlayerSave(user.steamId, JSON.stringify(json));
+	await playerDataBaseAccessor.writePlayerSave(user.steamId, json);
 	await userBank.update({ where: { UserId: user.id } }, { balance: userBank.balance - cost });
 }
 
@@ -167,6 +167,6 @@ async function writeNewDino(interaction, user, userBank, dinoId, cost) {
 		.setCharacterClass(dinoId)
 		.render();
 
-	await playerDataBaseAccessor.writePlayerSave(user.steamId, JSON.stringify(newFile));
+	await playerDataBaseAccessor.writePlayerSave(user.steamId, newFile);
 	await userBank.update({ where: { UserId: user.id } }, { balance: userBank.balance - cost });
 }

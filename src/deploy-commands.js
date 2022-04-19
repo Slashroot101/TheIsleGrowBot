@@ -49,10 +49,12 @@ exports.initializeCommands = async () => {
 		commands.push(command.data.toJSON());
 	}
 
+	logger.info(`Finished loading commands`);
+
 	const rest = new REST({ version: '9' }).setToken(token);
 
 	rest.put(Routes.applicationGuildCommands(clientId, guildId), { body: commands })
 		.then(() => logger.info('Succesfully registered commands!'))
-		.catch(logger.error);
+		.catch(e => logger.error(e));
 };
 

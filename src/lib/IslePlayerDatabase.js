@@ -31,7 +31,7 @@ module.exports = class IslePlayerDatabase {
 
 	async writePlayerSave(steamId, playerData) {
 		return new Promise((res, rej) => {
-			writeFile(resolve(`${this.databasePath}/Survival/Players/${steamId}.json`), JSON.stringify(playerData), async (newFileErr) => {
+			writeFile(resolve(`${this.databasePath}/Survival/Players/${steamId}.json`), playerData, async (newFileErr) => {
 				if (newFileErr) rej(newFileErr);
 				res();
 			});

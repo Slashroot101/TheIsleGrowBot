@@ -26,7 +26,7 @@ const logger = require('./lib/logger');
 	await database.dbConnection.sync({ force: false });
 	await initializeCommands();
 	await createWebhooks(`${stripeWebhook}/donate`);
-
+	logger.info('Finished creating webhooks');
 	client.once('ready', async () => {
 		await deployRoles(client);
 		await queueSubscriptions(nats, client);

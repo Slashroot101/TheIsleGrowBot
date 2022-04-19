@@ -184,7 +184,6 @@ module.exports = class DinoFactory {
 	}
 
 	render() {
-		logger.info(this.dinoObject);
 		return JSON.stringify(this.dinoObject);
 	}
 };
