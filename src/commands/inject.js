@@ -15,7 +15,7 @@ const playerDataBaseAccessor = new IslePlayerDatabase(process.env.playerDatabase
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('inject')
-		.setDescription('Uses fossils to inject your dino on the server.')
+		.setDescription('Uses fossils to inject your dino on the server. Use command /grow if you already have a dino with a skin that you would like to grow.')
 		.addStringOption(opt => {
 			const options = opt.setName('dino').setDescription('Dinosaurs that have a cost.');
 			options.setRequired(false);
