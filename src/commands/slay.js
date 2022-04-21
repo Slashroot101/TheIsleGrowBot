@@ -39,29 +39,37 @@ module.exports = {
 					);
 
 
-				await interaction.reply({ content: 'Are you sure you want to slay your existing dino?', components: [row] });
-
+				await interaction.deferReply();
+				await interaction.editReply({ content: 'Are you sure you want to slay your existing dino?', components: [row] });
 				const filter = i => i.customId === 'DinoSlayAccept' || i.customId === 'DinoSlayDeny';
 
 				const collector = interaction.channel.createMessageComponentCollector({ filter, time: 15000 });
 				let isCollectionSuccess = false;
-				collector.on('collect', async () => {
+				collector.on('collect', async (i) => {
 					isCollectionSuccess = true;
-					rm(`${playerDatabase}/Survival/Players/${user.steamId}.json`, async (err) => {
-						if (err) {
-							logger.info(`Executing ${interaction.commandName} for user [userId=${user.discordId}] but an error occured`);
-							await interaction.reply(' an error occured while slaying your dino');
-						}
-
-						logger.info(`Executing ${interaction.commandName} for user [userId=${user.discordId}] and succeeded`);
-						await interaction.followUp('Your slay request has suceeded!');
-					});
+					if(i.customId === 'DinoSlayAccept') {
+						rm(`${playerDatabase}/Survival/Players/${user.steamId}.json`, async (err) => {
+							if (err) {
+								if(err.code === 'ENOENT') {
+									return await i.reply(' You have no dino to slay currently!');
+								}
+								logger.error(err);
+								logger.info(`Executing ${interaction.commandName} for user [userId=${user.discordId}] but an error occured`);
+								return await i.reply(' an error occured while slaying your dino');
+							}
+	
+							logger.info(`Executing ${interaction.commandName} for user [userId=${user.discordId}] and succeeded`);
+							return await i.reply('Your slay request has suceeded!');
+						});
+					} else {
+						await i.reply(' Okay, cancelling dino slay.');
+					}
 				});
 
 				collector.on('end', async () => {
 					if (!isCollectionSuccess) {
 						logger.info(`Executing ${interaction.commandName} for user [userId=${user.discordId}] but it timed out.`)
-						await interaction.reply('Command timed out. Please run the command again!');
+						await interaction.editReply('Command timed out. Please run the command again!');
 					}
 				});
 			}

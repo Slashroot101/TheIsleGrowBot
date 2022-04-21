@@ -115,7 +115,8 @@ module.exports = {
 
 				await GrowDinoRequest.update({ growStatus: growStatusEnum.waitingOnUser }, { where: { id: growDino.id } });
 
-				await interaction.reply({ content: 'Do you want to slay your existing dino and inject/grow this one?', components: [row] });
+				await interaction.deferReply();
+				await interaction.editReply({ content: 'Do you want to slay your existing dino and inject/grow this one?', components: [row] });
 
 				const filter = i => i.customId === 'DinoGrowAccept' || i.customId === 'DinoGrowDeny';
 
@@ -138,11 +139,13 @@ module.exports = {
 						await GrowDinoRequest.update({ growStatus: growStatusEnum.declined }, { where: { id: growDino.id } });
 						await i.reply('Cancelling dino grow!');
 					}
+
+					collector.stop();
 				});
 
 				collector.on('end', () => {
 					if (!isCollectionSuccess) {
-						interaction.reply('Command timed out. Please run the command again!');
+						interaction.editReply('Command timed out. Please run the command again!');
 					}
 				});
 			} else {
