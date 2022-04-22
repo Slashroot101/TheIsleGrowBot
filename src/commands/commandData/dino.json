@@ -2,175 +2,206 @@
     "SuchoAdultS": {
         "displayName": "Suchomimus",
         "value": "SuchoAdultS",
-        "cost": 200,
-        "requiresApex": false
+        "cost": 10,
+        "requiresApex": false,
+        "isSandbox": false 
     },
     "RexAdultS": {
         "displayName": "T-Rex Juvenile",
         "value": "RexAdultS",
-        "cost": 2500,
-        "requiresApex": true
+        "cost": 22,
+        "requiresApex": true,
+        "isSandbox": false
     },
     "AlloAdultS": {
         "displayName": "Allosaurus",
         "value": "AlloAdultS",
-        "cost": 200,
-        "requiresApex": false
+        "cost": 10,
+        "requiresApex": false,
+        "isSandbox": false
     },
     "CarnoAdultS": {
         "displayName": "Carnotaurus",
         "value": "CarnoAdultS",
-        "cost": 200,
-        "requiresApex": false
+        "cost": 10,
+        "requiresApex": false,
+        "isSandbox": false
+
     },
     "CeratoAdultS": {
         "displayName": "Ceratosaurus",
         "value": "CeratoAdultS",
-        "cost": 200,
-        "requiresApex": false
+        "cost": 10,
+        "requiresApex": false,
+        "isSandbox": false
     },
     "DiloAdultS": {
         "displayName": "Dilophosaurus",
         "value": "DiloAdultS",
-        "cost": 100,
-        "requiresApex": false
+        "cost": 6,
+        "requiresApex": false,
+        "isSandbox": false
     },
     "GigaAdultS": {
         "displayName": "Giganotosaurus Juvenile",
         "value": "GigaAdultS",
-        "cost": 2500,
-        "requiresApex": true
+        "cost": 22,
+        "requiresApex": true,
+        "isSandbox": false
+
     },
     "UtahAdultS": {
         "displayName": "Utahraptor",
         "value": "UtahAdultS",
-        "cost": 100,
-        "requiresApex": false
+        "cost": 6,
+        "requiresApex": false,
+        "isSandbox": false
     },
     "Spino": {
         "displayName": "Spinosaurus Juvenile",
         "value": "Spino",
-        "cost": 2500,
-        "requiresApex": true
+        "cost": 25,
+        "requiresApex": true,
+        "isSandbox": false
     },
     "Herrera": {
         "displayName": "Herrerasaurus",
         "value": "Herrera",
-        "cost": 25,
-        "requiresApex": false
+        "cost": 2,
+        "requiresApex": false,
+        "isSandbox": true
     },
     "Bary": {
         "displayName": "Baryonx",
         "value": "Bary",
-        "cost": 100,
-        "requiresApex": false
+        "cost": 4,
+        "requiresApex": false,
+        "isSandbox": true
     },
     "Acro": {
         "displayName": "Acrocanthosaurus",
         "value": "Acro",
-        "cost": 350,
-        "requiresApex": false
+        "cost": 10,
+        "requiresApex": false,
+        "isSandbox": true
     },
     "Theri": {
         "displayName": "Therizinosaurus",
         "value": "Theri",
-        "cost": 250,
-        "requiresApex": false
+        "cost": 10,
+        "requiresApex": false,
+        "isSandbox": true
     },
     "Stego": {
         "displayName": "Stegosaurus",
         "value": "Stego",
-        "cost": 150,
-        "requiresApex": false
+        "cost": 10,
+        "requiresApex": false,
+        "isSandbox": true
     },
     "Shant": {
         "displayName": "Shantungosaurus",
         "value": "Shant",
-        "cost": 500,
-        "requiresApex": false
+        "cost": 18,
+        "requiresApex": false,
+        "isSandbox": true
     },
     "Camara": {
         "displayName": "Camarasaurus",
         "value": "Camara",
-        "cost": 1100,
-        "requiresApex": false
+        "cost": 18,
+        "requiresApex": false,
+        "isSandbox": true
     },
     "Austro": {
-        "displayName": "austroraptor",
+        "displayName": "Austroraptor",
         "value": "Austro",
-        "cost": 25,
-        "requiresApex": false
+        "cost": 2,
+        "requiresApex": false,
+        "isSandbox": true
     },
     "Anky": {
         "displayName": "Ankylosaurus",
         "value": "Anky",
-        "cost": 100,
-        "requiresApex": false
+        "cost": 10,
+        "requiresApex": false,
+        "isSandbox": true
     },
     "DiabloAdultS": {
         "displayName": "Diabloceratops",
         "value": "DiabloAdultS",
-        "cost": 200,
-        "requiresApex": false
+        "cost": 10,
+        "requiresApex": false,
+        "isSandbox": false
     },
     "DryoAdultS": {
         "displayName": "Dryosaurus",
         "value": "DryoAdultS",
-        "cost": 100,
-        "requiresApex": false
+        "cost": 6,
+        "requiresApex": false,
+        "isSandbox": false
     },
     "GalliAdultS": {
         "displayName": "Gallimimus",
         "value": "GalliAdultS",
-        "cost": 100,
-        "requiresApex": false
+        "cost": 6,
+        "requiresApex": false,
+        "isSandbox": false
     },
     "MaiaAdultS": {
         "displayName": "Maiasaurus",
         "value": "MaiaAdultS",
-        "cost": 200,
-        "requiresApex": false
+        "cost": 10,
+        "requiresApex": false,
+        "isSandbox": false
     },
     "PachyAdultS": {
         "displayName": "Pachycephalosaurs",
         "value": "PachyAdultS",
-        "cost": 100,
-        "requiresApex": false
+        "cost": 6,
+        "requiresApex": false,
+        "isSandbox": false
     },
     "ParaAdultS": {
         "displayName": "Parasaurolophus",
         "value": "ParaAdultS",
-        "cost": 200,
-        "requiresApex": false
+        "cost": 10,
+        "requiresApex": false,
+        "isSandbox": false
     },
     "TrikeAdultS": {
         "displayName": "Triceratops",
         "value": "TrikeAdultS",
-        "cost": 400,
-        "requiresApex": false
+        "cost": 18,
+        "requiresApex": false,
+        "isSandbox": false
     },
     "Velo": {
         "displayName": "Velociraptor",
         "value": "Velo",
         "cost": 0,
-        "requiresApex": false
+        "requiresApex": false,
+        "isSandbox": true
     },
     "Taco": {
         "displayName": "Psittacosaurus",
         "value": "Taco",
         "cost": 0,
-        "requiresApex": false
+        "requiresApex": false,
+        "isSandbox": true
     },
     "Oro": {
         "displayName": "Orodromeus",
         "value": "Oro",
         "cost": 0,
-        "requiresApex": false
+        "requiresApex": false,
+        "isSandbox": true
     },
     "Ava": {
         "displayName": "Avaceratops",
         "value": "Ava",
         "cost": 0,
-        "requiresApex": false
+        "requiresApex": false,
+        "isSandbox": true
     }
 }   

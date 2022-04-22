@@ -41,7 +41,7 @@ module.exports = {
 
 				await interaction.deferReply();
 				await interaction.editReply({ content: 'Are you sure you want to slay your existing dino?', components: [row] });
-				const filter = i => i.customId === 'DinoSlayAccept' || i.customId === 'DinoSlayDeny';
+				const filter = i => i.customId === 'DinoSlayAccept' || i.customId === 'DinoSlayDeny' && i.user.id === interaction.user.id;
 
 				const collector = interaction.channel.createMessageComponentCollector({ filter, time: 15000 });
 				let isCollectionSuccess = false;

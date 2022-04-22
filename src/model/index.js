@@ -9,6 +9,7 @@ const UserCommandBlacklist = require('./UserCommandBlacklist');
 const Donation = require('./Donation');
 const StripeWebhook = require('./StripeWebhook');
 const DinoStats = require('./DinoStats');
+const InjectSpawnLocations = require('./InjectSpawnLocations');
 
 module.exports = {
 	User,
@@ -22,4 +23,5 @@ module.exports = {
 	Donation,
 	StripeWebhook,
 	DinoStats,
+	InjectSpawnLocations,
 };

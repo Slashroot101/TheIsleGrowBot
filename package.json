@@ -31,7 +31,8 @@
     "pg": "^8.7.3",
     "pino": "^7.0.0-rc.9",
     "sequelize": "^6.15.0",
-    "stripe": "^8.214.0"
+    "stripe": "^8.214.0",
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
     "eslint": "^8.12.0",

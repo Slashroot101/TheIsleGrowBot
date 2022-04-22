@@ -14,7 +14,7 @@ module.exports = class IslePlayerDatabase {
 
 	async doesPlayerFileExist(steamId) {
 		return new Promise((res) => {
-			exists(`${this.databasePath}/Survival/Players/${steamId}.json`, async () => {
+			exists(`${this.databasePath}/Survival/Players/${steamId}.json`, async (exists) => {
 				res(exists);
 			});
 		});
