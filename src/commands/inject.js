@@ -50,7 +50,7 @@ module.exports = {
 																	}
 																}
 															);
-																console.log(selectOptions)
+
 		const row = new MessageActionRow()
 		.addComponents(
 			new MessageSelectMenu()
@@ -116,7 +116,7 @@ module.exports = {
 				const playerJson = await playerDataBaseAccessor.getPlayerSave(user.steamId);
 				const parsedJon = JSON.parse(playerJson);
 				const dinoName = `${dinoData[parsedJon.CharacterClass].displayName}-${uuid.v4()}`;
-				await new DinoVault({dinoDisplayName: dinoData[parsedJon.CharacterClass].displayName, savedName: dinoName, dinoJson: playerJson}).save();
+				await new DinoVault({dinoDisplayName: dinoData[parsedJon.CharacterClass].displayName, savedName: dinoName, dinoJson: JSON.stringify(playerJson), vaultedById: user.id}).save();
 				logger.info(`User [discordId=${interaction.user.id}] accepted to grow [dinoId=${dinoId}] and slay the existing dino`);
 				isCollectionSuccess = true;
 				await GrowDinoRequest.update({ growStatus: growStatusEnum.processing }, { where: { id: growDino.id } });
