@@ -1,0 +1,104 @@
+{
+  "Colors": {
+    "Allo": {
+      "start": 0,
+      "end": 4
+    },
+    "Carno": {
+      "start": 5,
+      "end": 9
+    },
+    "Rex": {
+      "start": 10,
+      "end": 14
+    },
+    "Cerato": {
+      "start": 15,
+      "end": 19
+    },
+    "Giga": {
+      "start": 20,
+      "end": 24
+    },
+    "Utah": {
+      "start": 25,
+      "end": 29
+    },
+    "Diablo": {
+      "start": 30,
+      "end": 34
+    },
+    "Dyro": {
+      "start": 35,
+      "end": 39
+    },
+    "Gallie": {
+      "start": 40,
+      "end": 44
+    },
+    "Maia": {
+      "start": 45,
+      "end": 49
+    },
+    "Para" : {
+      "start": 50,
+      "end": 54
+    },
+    "Trike": {
+      "start": 55,
+      "end": 59
+    },
+    "Sucho": [
+      {
+        "name": "Sucho1",
+        "value": 60
+      },
+      {
+        "name": "Sucho2",
+        "value": 67
+      },
+      {
+        "name": "Sucho3",
+        "value": 68
+      },
+      {
+        "name": "Sucho4",
+        "value": 69
+      },
+      {
+        "name": "Sucho5",
+        "value": 70
+      }
+    ],
+    "CarnivoreCrest": [
+      {
+        "name": "Red Crest",
+        "value": 62
+      },
+      {
+        "name": "Blue Crest",
+        "value": 63
+      },
+      {
+        "name": "Yellow Crest",
+        "value": 64
+      },
+      {
+        "name": "Orange Crest",
+        "value": 65
+      },
+      {
+        "name": "Lime Crest",
+        "value": 66
+      }
+    ],
+    "Pachy": {
+      "start": 71,
+      "end": 75
+    },
+    "Dilo": {
+      "start": 76,
+      "end": 80
+    }
+  }
+}

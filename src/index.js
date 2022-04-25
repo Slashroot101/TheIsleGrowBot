@@ -14,7 +14,7 @@ const queueSubscriptions = require('./queueSubscriptions');
 const { subMinutes, formatDistance, addMinutes } = require('date-fns');
 const { createWebhooks } = require('./lib/stripeAccessor');
 const logger = require('./lib/logger');
-
+const {initColorMap} = require('./lib/ColorMap');
 (async () => {
 	const nats = await connect({
 		url: natsUrl,
@@ -23,7 +23,12 @@ const logger = require('./lib/logger');
 	Object.keys(Models).forEach((ele) => {
 		Models[ele].associate(Models);
 	});
+	logger.info(`Establishing color map`);
+	initColorMap();
+	logger.info(`Color map complete`);
+	logger.info(`Creating database connection`);
 	await database.dbConnection.sync({ force: false });
+	logger.info(`Finished creating database connection`);
 	await initializeCommands();
 	await createWebhooks(`${stripeWebhook}/donate`);
 	logger.info('Finished creating webhooks');

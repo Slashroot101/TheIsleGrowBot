@@ -5,8 +5,8 @@ const logger = require('../lib/logger');
 
 module.exports = {
 	data: new SlashCommandBuilder()
-		.setName('addspawn')
-		.setDescription('Adds a spawn that users can choose')
+		.setName('updatespawn')
+		.setDescription('Updates a spawn that injects can spawn at')
 		.addStringOption(opt =>
 			opt.setName('name')
 				.setDescription('The name of the spawn locations that users will see')

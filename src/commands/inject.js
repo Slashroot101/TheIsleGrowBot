@@ -1,9 +1,9 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { playerDatabase, maxApex } = require('../config');
 const User = require('../model/User');
-const {Op} = require('sequelize');
+const {Op, Sequelize} = require('sequelize');
 const dinoData = require('./commandData/dino.json');
-const { UserBank, GrowDinoRequest, DinoStats, DinoVault } = require('../model');
+const { UserBank, GrowDinoRequest, DinoStats, DinoVault, InjectSpawnLocations } = require('../model');
 const growStatusEnum = require('../model/Enum/GrowStatusEnum');
 const { MessageActionRow, MessageButton, MessageSelectMenu } = require('discord.js');
 const IslePlayerDatabase = require('../lib/IslePlayerDatabase');
@@ -39,7 +39,7 @@ module.exports = {
 		for(const key in dinoData){
 			dinos.push(dinoData[key])
 		}
-		console.log((user.isApexApproved === 'Y'))
+
 		const selectOptions = dinos
 															.filter(x => x.isSandbox === true || x.requiresApex === (user.isApexApproved === 'Y'))
 															.map(x => {
@@ -61,7 +61,7 @@ module.exports = {
 		
 		await interaction.reply({ content: 'Select your dino from the list below!', components: [row] });
 		const scFilter = i => i.customId === 'DinoSelectId' && i.user.id === interaction.user.id;
-		const selectCollector = interaction.channel.createMessageComponentCollector({ scFilter, time: 15000 });
+		const selectCollector = await interaction.channel.createMessageComponentCollector({ scFilter, time: 15000 });
 		let hasCollected = false;
 	  selectCollector.on('end', async (i) => {
 			if(!hasCollected){
@@ -106,9 +106,9 @@ module.exports = {
 				return await sc.reply('You need to link your steam ID first with /link!');
 			}
 	
+			const spawnLocations = await InjectSpawnLocations.findOne({order: [Sequelize.literal('RANDOM()')]});
+			console.log(spawnLocations)
 			const growDino = await new GrowDinoRequest({ growStatus: growStatusEnum.initialize, cost, initiatedByDiscordId: interaction.user.id, dinoName: dinoData[dinoId].value, UserId: user.id }).save();
-			
-
 			const playerData = await playerDataBaseAccessor.doesPlayerFileExist(user.steamId);
 			logger.info(`Executing ${interaction.commandName} looking for player save for ${user.steamId}`);
 			if(playerData) {
@@ -120,12 +120,12 @@ module.exports = {
 				logger.info(`User [discordId=${interaction.user.id}] accepted to grow [dinoId=${dinoId}] and slay the existing dino`);
 				isCollectionSuccess = true;
 				await GrowDinoRequest.update({ growStatus: growStatusEnum.processing }, { where: { id: growDino.id } });
-				await updateDinoFile(interaction, user, userBank, dinoId, cost);
+				await updateDinoFile(interaction, user, userBank, dinoId, cost, spawnLocations.dataValues.spawnPoint);
 				await GrowDinoRequest.update({ growStatus: growStatusEnum.processed }, { where: { id: growDino.id } });
 				await sc.reply(`Your grow has been processed! Your existing dino was vaulted with name: ${dinoName}`);
 			} else {
 				logger.info(`User [discordId=${interaction.user.id}] has requested to grow [dinoId=${dinoId}] with no existing dino`);
-				await writeNewDino(interaction, user, userBank, dinoId, cost);
+				await writeNewDino(interaction, user, userBank, dinoId, cost, spawnLocations.dataValues.spawnPoint);
 				await sc.reply('Your grow has been processed!');
 			}
 			await interaction.editReply('Done!');
@@ -134,10 +134,10 @@ module.exports = {
 	},
 };
 
-async function updateDinoFile(interaction, user, userBank, dinoId, cost) {
+async function updateDinoFile(interaction, user, userBank, dinoId, cost, location) {
 	const newFile = new DinoFactory()
 		.setCharacterClass(dinoId)
-		.setCharacterPosition("X=466765.250 Y=121168.438 Z=-46759.008")
+		.setCharacterPosition(location)
 		.setCharacterRotation("P=0.000000 Y=109.426399 R=0.000000")
 		.setCharacterThirst(31)
 		.setCharacterStamina(182)
@@ -163,10 +163,10 @@ async function updateDinoFile(interaction, user, userBank, dinoId, cost) {
 	await userBank.update({ where: { UserId: user.id } }, { balance: userBank.balance - cost });
 }
 
-async function writeNewDino(interaction, user, userBank, dinoId, cost) {
+async function writeNewDino(interaction, user, userBank, dinoId, cost, location) {
 	const newFile = new DinoFactory()
 		.setCharacterClass(dinoId)
-		.setCharacterPosition("X=466765.250 Y=121168.438 Z=-46759.008")
+		.setCharacterPosition(location)
 		.setCharacterRotation("P=0.000000 Y=109.426399 R=0.000000")
 		.setCharacterThirst(31)
 		.setCharacterStamina(182)
