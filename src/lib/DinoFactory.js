@@ -2,35 +2,39 @@ const logger = require('../lib/logger');
 
 module.exports = class DinoFactory {
 	dinoObject = {};
-	constructor() {
-		this.dinoObject = {
-			'CharacterClass': null,
-			'DNA': null,
-			'Location_Isle_V3': null,
-			'Rotation_Isle_V3': null,
-			'Growth': null,
-			'Hunger': null,
-			'Thirst': null,
-			'Stamina': null,
-			'Health': null,
-			'BleedingRate': null,
-			'Oxygen': null,
-			'bGender': null,
-			'bIsResting': null,
-			'bBrokenLegs': null,
-			'ProgressionPoints': null,
-			'ProgressionTier': null,
-			'UnlockedCharacters': null,
-			'CameraRotation_Isle_V3': null,
-			'CameraDistance_Isle_V3': null,
-			'SkinPaletteSection1': null,
-			'SkinPaletteSection2': null,
-			'SkinPaletteSection3': null,
-			'SkinPaletteSection4': null,
-			'SkinPaletteSection5': null,
-			'SkinPaletteSection6': null,
-			'SkinPaletteVariation': null,
-		};
+	constructor(json) {
+		if(json){
+			this.dinoObject = json;
+		} else {
+			this.dinoObject = {
+				'CharacterClass': null,
+				'DNA': null,
+				'Location_Isle_V3': null,
+				'Rotation_Isle_V3': null,
+				'Growth': null,
+				'Hunger': null,
+				'Thirst': null,
+				'Stamina': null,
+				'Health': null,
+				'BleedingRate': null,
+				'Oxygen': null,
+				'bGender': null,
+				'bIsResting': null,
+				'bBrokenLegs': null,
+				'ProgressionPoints': null,
+				'ProgressionTier': null,
+				'UnlockedCharacters': null,
+				'CameraRotation_Isle_V3': null,
+				'CameraDistance_Isle_V3': null,
+				'SkinPaletteSection1': null,
+				'SkinPaletteSection2': null,
+				'SkinPaletteSection3': null,
+				'SkinPaletteSection4': null,
+				'SkinPaletteSection5': null,
+				'SkinPaletteSection6': null,
+				'SkinPaletteVariation': null,
+			};
+		}
 	}
 
 	setCharacterClass(dinoClass) {

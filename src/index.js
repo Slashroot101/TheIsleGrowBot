@@ -7,7 +7,7 @@ const path = require('path');
 const database = require('./database');
 const { Op } = require('sequelize');
 const { deployRoles } = require('./deploy-roles');
-const { User, CommandAudit, UserCommandBlacklist } = require('./model');
+const { User, CommandAudit, UserCommandBlacklist, GrowDinoRequest } = require('./model');
 const { connect } = require('nats');
 const Models = require('./model');
 const queueSubscriptions = require('./queueSubscriptions');
@@ -15,6 +15,7 @@ const { subMinutes, formatDistance, addMinutes } = require('date-fns');
 const { createWebhooks } = require('./lib/stripeAccessor');
 const logger = require('./lib/logger');
 const {initColorMap} = require('./lib/ColorMap');
+const InjectionWorkflow = require('./lib/InjectionWorkflow');
 (async () => {
 	const nats = await connect({
 		url: natsUrl,
@@ -39,6 +40,15 @@ const {initColorMap} = require('./lib/ColorMap');
 	});
 
 	client.on('interactionCreate', async interaction => {
+		if(interaction.isSelectMenu()){
+			let user = await User.findOne({ where: { discordId: interaction.user.id } });
+			if(interaction.customId.includes('DinoInjection')){
+				let func = await new InjectionWorkflow().next(user.id, true);
+				await func(interaction, user.id, interaction.values[0]);
+				func = await new InjectionWorkflow().next(user.id, true);
+				await func(interaction, user.id, null);
+			}
+		}
 		if (!interaction.isCommand()) return;
 		let user = await User.findOne({ where: { discordId: interaction.user.id } });
 		if (!user) {

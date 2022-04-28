@@ -4,28 +4,32 @@
         "value": "SuchoAdultS",
         "cost": 10,
         "requiresApex": false,
-        "isSandbox": false 
+        "isSandbox": false,
+        "diet": "Carnivore" 
     },
     "RexAdultS": {
         "displayName": "T-Rex Juvenile",
         "value": "RexAdultS",
         "cost": 22,
         "requiresApex": true,
-        "isSandbox": false
+        "isSandbox": false,
+        "diet": "Carnivore"
     },
     "AlloAdultS": {
         "displayName": "Allosaurus",
         "value": "AlloAdultS",
         "cost": 10,
         "requiresApex": false,
-        "isSandbox": false
+        "isSandbox": false,
+        "diet": "Carnivore"
     },
     "CarnoAdultS": {
         "displayName": "Carnotaurus",
         "value": "CarnoAdultS",
         "cost": 10,
         "requiresApex": false,
-        "isSandbox": false
+        "isSandbox": false,
+        "diet": "Carnivore"
 
     },
     "CeratoAdultS": {
@@ -33,21 +37,24 @@
         "value": "CeratoAdultS",
         "cost": 10,
         "requiresApex": false,
-        "isSandbox": false
+        "isSandbox": false,
+        "diet": "Carnivore"
     },
     "DiloAdultS": {
         "displayName": "Dilophosaurus",
         "value": "DiloAdultS",
         "cost": 6,
         "requiresApex": false,
-        "isSandbox": false
+        "isSandbox": false,
+        "diet": "Carnivore"
     },
     "GigaAdultS": {
         "displayName": "Giganotosaurus Juvenile",
         "value": "GigaAdultS",
         "cost": 22,
         "requiresApex": true,
-        "isSandbox": false
+        "isSandbox": false,
+        "diet": "Carnivore"
 
     },
     "UtahAdultS": {
@@ -55,153 +62,175 @@
         "value": "UtahAdultS",
         "cost": 6,
         "requiresApex": false,
-        "isSandbox": false
+        "isSandbox": false,
+        "diet": "Carnivore"
     },
     "Spino": {
         "displayName": "Spinosaurus Juvenile",
         "value": "Spino",
         "cost": 25,
         "requiresApex": true,
-        "isSandbox": false
+        "isSandbox": false,
+        "diet": "Carnivore"
     },
     "Herrera": {
         "displayName": "Herrerasaurus",
         "value": "Herrera",
         "cost": 2,
         "requiresApex": false,
-        "isSandbox": true
+        "isSandbox": true,
+        "diet": "Herbivore"
     },
     "Bary": {
         "displayName": "Baryonx",
         "value": "Bary",
         "cost": 4,
         "requiresApex": false,
-        "isSandbox": true
+        "isSandbox": true,
+        "diet": "Herbivore"
     },
     "Acro": {
         "displayName": "Acrocanthosaurus",
         "value": "Acro",
         "cost": 10,
         "requiresApex": false,
-        "isSandbox": true
+        "isSandbox": true,
+        "diet": "Carnivore"
     },
     "Theri": {
         "displayName": "Therizinosaurus",
         "value": "Theri",
         "cost": 10,
         "requiresApex": false,
-        "isSandbox": true
+        "isSandbox": true,
+        "diet": "Herbivore"
     },
     "Stego": {
         "displayName": "Stegosaurus",
         "value": "Stego",
         "cost": 10,
         "requiresApex": false,
-        "isSandbox": true
+        "isSandbox": true,
+        "diet": "Herbivore"
     },
     "Shant": {
         "displayName": "Shantungosaurus",
         "value": "Shant",
         "cost": 18,
         "requiresApex": false,
-        "isSandbox": true
+        "isSandbox": true,
+        "diet": "Herbivore"
     },
     "Camara": {
         "displayName": "Camarasaurus",
         "value": "Camara",
         "cost": 18,
         "requiresApex": false,
-        "isSandbox": true
+        "isSandbox": true,
+        "diet": "Herbivore"
     },
     "Austro": {
         "displayName": "Austroraptor",
         "value": "Austro",
         "cost": 2,
         "requiresApex": false,
-        "isSandbox": true
+        "isSandbox": true,
+        "diet": "Carnivore"
     },
     "Anky": {
         "displayName": "Ankylosaurus",
         "value": "Anky",
         "cost": 10,
         "requiresApex": false,
-        "isSandbox": true
+        "isSandbox": true,
+        "diet": "Herbivore"
     },
     "DiabloAdultS": {
         "displayName": "Diabloceratops",
         "value": "DiabloAdultS",
         "cost": 10,
         "requiresApex": false,
-        "isSandbox": false
+        "isSandbox": false,
+        "diet": "Herbivore"
     },
     "DryoAdultS": {
         "displayName": "Dryosaurus",
         "value": "DryoAdultS",
         "cost": 6,
         "requiresApex": false,
-        "isSandbox": false
+        "isSandbox": false,
+        "diet": "Herbivore"
     },
     "GalliAdultS": {
         "displayName": "Gallimimus",
         "value": "GalliAdultS",
         "cost": 6,
         "requiresApex": false,
-        "isSandbox": false
+        "isSandbox": false,
+        "diet": "Herbivore"
     },
     "MaiaAdultS": {
         "displayName": "Maiasaurus",
         "value": "MaiaAdultS",
         "cost": 10,
         "requiresApex": false,
-        "isSandbox": false
+        "isSandbox": false,
+        "diet": "Herbivore"
     },
     "PachyAdultS": {
         "displayName": "Pachycephalosaurs",
         "value": "PachyAdultS",
         "cost": 6,
         "requiresApex": false,
-        "isSandbox": false
+        "isSandbox": false,
+        "diet": "Herbivore"
     },
     "ParaAdultS": {
         "displayName": "Parasaurolophus",
         "value": "ParaAdultS",
         "cost": 10,
         "requiresApex": false,
-        "isSandbox": false
+        "isSandbox": false,
+        "diet": "Herbivore"
     },
     "TrikeAdultS": {
         "displayName": "Triceratops",
         "value": "TrikeAdultS",
         "cost": 18,
         "requiresApex": false,
-        "isSandbox": false
+        "isSandbox": false,
+        "diet": "Herbivore"
     },
     "Velo": {
         "displayName": "Velociraptor",
         "value": "Velo",
         "cost": 0,
         "requiresApex": false,
-        "isSandbox": true
+        "isSandbox": true,
+        "diet": "Carnivore"
     },
     "Taco": {
         "displayName": "Psittacosaurus",
         "value": "Taco",
         "cost": 0,
         "requiresApex": false,
-        "isSandbox": true
+        "isSandbox": true,
+        "diet": "Herbivore"
     },
     "Oro": {
         "displayName": "Orodromeus",
         "value": "Oro",
         "cost": 0,
         "requiresApex": false,
-        "isSandbox": true
+        "isSandbox": true,
+        "diet": "Herbivore"
     },
     "Ava": {
         "displayName": "Avaceratops",
         "value": "Ava",
         "cost": 0,
         "requiresApex": false,
-        "isSandbox": true
+        "isSandbox": true,
+        "diet": "Herbivore"
     }
 }   

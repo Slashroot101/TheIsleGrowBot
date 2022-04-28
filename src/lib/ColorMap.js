@@ -21,7 +21,7 @@ exports.initColorMap = () => {
 exports.allowedHerbivoreColors = {
   SkinPalleteSection1: {
     description: 'Detail/Crest',
-    allowedValues: ["Diablo2", "Allo1", "Cerato1", "Giga1", "Diablo1", "Gallie1", "Para1", "Trike1", "Carnivore Red", "Carnivore Blue", "Carnivore Yellow", "Carnivore Orange"],
+    allowedValues: ["Diablo2", "Allo1", "Cerato1", "Giga1", "Diablo1", "Gallie1", "Para1", "Trike1", "Red Crest", "Blue Crest", "Yellow Crest", "Orange Crest"],
   },
   SkinPalleteSection2: {
     description: 'Underbelly',

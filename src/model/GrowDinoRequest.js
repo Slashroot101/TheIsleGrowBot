@@ -10,19 +10,15 @@ class GrowDinoRequest extends Model {
 
 GrowDinoRequest.init(
 	{
-		growStatus: {
-			type: DataTypes.ENUM(growStatusEnum.initialize, growStatusEnum.waitingOnUser, growStatusEnum.processing, growStatusEnum.processed, growStatusEnum.declined),
-			defaultValue: growStatusEnum.initialize,
-		},
-		cost: {
+		step: {
 			type: DataTypes.INTEGER,
 		},
-		initiatedByDiscordId: {
-			type: DataTypes.STRING,
+		isComplete: {
+			type: DataTypes.BOOLEAN,
 		},
-		dinoName: {
+		value: {
 			type: DataTypes.STRING,
-		},
+		}
 	},
 	{
 		paranoid: true,

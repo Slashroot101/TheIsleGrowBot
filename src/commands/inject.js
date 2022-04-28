@@ -11,10 +11,11 @@ const DinoFactory = require('../lib/DinoFactory');
 const logger = require('../lib/logger');
 const playerDataBaseAccessor = new IslePlayerDatabase(process.env.playerDatabase);
 const uuid = require('uuid');
+const {allowedHerbivoreColors, allowedCarnivoreColors, colorMap} = require('../lib/ColorMap');
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('inject')
-		.setDescription('Uses fossils to grow a sandbox/apex dinosaur. Use /grow to grow any other kind of dino'),
+		.setDescription('Uses fossils to grow a sandbox/apex dinosaur. Use /grow to grow any other kind of dino.'),
 	cooldown: {
 		hasCooldown: true,
 		cooldownExecutions: 1,
@@ -105,7 +106,11 @@ module.exports = {
 				logger.info(`User [discordId=${interaction.user.id}] tried to grow [dinoId=${dinoId}] but did not have steam linked`);
 				return await sc.reply('You need to link your steam ID first with /link!');
 			}
-	
+
+			const diet = dinoData[dinoId].diet === 'Herbivore';
+			selectCollector.stop();
+			const skinValue1 = await promptSkinPallete1(interaction, true);
+			console.log(skinValue1)
 			const spawnLocations = await InjectSpawnLocations.findOne({order: [Sequelize.literal('RANDOM()')]});
 			console.log(spawnLocations)
 			const growDino = await new GrowDinoRequest({ growStatus: growStatusEnum.initialize, cost, initiatedByDiscordId: interaction.user.id, dinoName: dinoData[dinoId].value, UserId: user.id }).save();
@@ -129,10 +134,47 @@ module.exports = {
 				await sc.reply('Your grow has been processed!');
 			}
 			await interaction.editReply('Done!');
-			selectCollector.stop();
+
 		});
 	},
 };
+
+async function promptSkinPallete1(interaction, isHerbivore){
+	return new Promise(async (res, rej) => {
+		console.log(colorMap)
+		const selectOptions = (isHerbivore ? allowedHerbivoreColors.SkinPalleteSection1.allowedValues : allowedCarnivoreColors.SkinPalleteSection1.allowedValues)
+		.map(x => {
+
+				return {
+					label: x,
+					description: `Underbelly: ${x}`,
+					value: colorMap.get(x).toString()
+				}
+			}
+		);
+			console.log(selectOptions)
+		const row = new MessageActionRow()
+		.addComponents(
+			new MessageSelectMenu()
+				.setCustomId('DinoSkinPallete1')
+				.setPlaceholder('Select Underbelly')
+				.addOptions(selectOptions),
+		);
+		
+		await interaction.editReply({ content: 'Select your dino from the list below!', components: [row] });
+		const scFilter = i => i.customId === 'DinoSkinPallete1' && i.user.id === interaction.user.id;
+		const selectCollector = await interaction.channel.createMessageComponentCollector({ scFilter, time: 15000 });
+
+		selectCollector.on('collect', async (m) => {
+			await m.deferUpdate();
+			res(m.values[0]);
+		});
+
+		selectCollector.on('end', (m) => {
+			rej(`Timeout`);
+		});
+	});
+}
 
 async function updateDinoFile(interaction, user, userBank, dinoId, cost, location) {
 	const newFile = new DinoFactory()
