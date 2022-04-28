@@ -30,7 +30,6 @@
         "requiresApex": false,
         "isSandbox": false,
         "diet": "Carnivore"
-
     },
     "CeratoAdultS": {
         "displayName": "Ceratosaurus",
@@ -70,7 +69,7 @@
         "value": "Spino",
         "cost": 25,
         "requiresApex": true,
-        "isSandbox": false,
+        "isSandbox": true,
         "diet": "Carnivore"
     },
     "Herrera": {

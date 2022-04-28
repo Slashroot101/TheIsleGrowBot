@@ -18,7 +18,10 @@ GrowDinoRequest.init(
 		},
 		value: {
 			type: DataTypes.STRING,
-		}
+		},
+		messageId: {
+			type: DataTypes.STRING,
+		},
 	},
 	{
 		paranoid: true,

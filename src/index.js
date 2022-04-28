@@ -43,10 +43,11 @@ const InjectionWorkflow = require('./lib/InjectionWorkflow');
 		if(interaction.isSelectMenu()){
 			let user = await User.findOne({ where: { discordId: interaction.user.id } });
 			if(interaction.customId.includes('DinoInjection')){
-				let func = await new InjectionWorkflow().next(user.id, true);
-				await func(interaction, user.id, interaction.values[0]);
-				func = await new InjectionWorkflow().next(user.id, true);
-				await func(interaction, user.id, null);
+				let func = await new InjectionWorkflow().next(user.id, true, client);
+				await func(interaction, user.id, interaction.values[0], client);
+				func = await new InjectionWorkflow().next(user.id, true, client);
+				if(func === undefined || func === null) return;
+				await func(interaction, user.id, null, client);
 			}
 		}
 		if (!interaction.isCommand()) return;
@@ -103,7 +104,7 @@ const InjectionWorkflow = require('./lib/InjectionWorkflow');
 		}
 		catch (error) {
 			logger.error(error);
-			await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
+			await interaction.channel.send({ content: `<@${interaction.user.id}>,there was an error while executing this command!`});
 		}
 	});
 

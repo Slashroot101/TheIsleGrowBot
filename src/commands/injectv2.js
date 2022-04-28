@@ -14,8 +14,8 @@ module.exports = {
 	},
   adminRequired: false,
 	requiresSteamLink: true,
-	async execute(interaction) {
+	async execute(interaction, client) {
     const user = await User.findOne({where: {discordId: interaction.user.id}});
-    const workflow = await (await new InjectionWorkflow().next(user.dataValues.id, false))(interaction, user.dataValues.id);
+    const workflow = await (await new InjectionWorkflow().next(user.dataValues.id, false, client))(interaction, user.dataValues.id, null, client);
   }
 }

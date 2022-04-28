@@ -2,6 +2,9 @@ const {GrowDinoRequest, User} = require('../model');
 const dinoData = require('../commands/commandData/dino.json');
 const { MessageActionRow, MessageButton, MessageSelectMenu } = require('discord.js'); 
 const {allowedCarnivoreColors, allowedHerbivoreColors, colorMap} = require('./ColorMap');
+const {guildId, replyChannel} = require('../config');
+const logger = require('./logger');
+const getMessageById = require('./getMessageById');
 
 module.exports = class InjectionWorkflow {
   constructor(){
@@ -9,35 +12,52 @@ module.exports = class InjectionWorkflow {
     this.pickDino = this.pickDino.bind(this);
   }
 
-  async next(userId, autocall){
+  async next(userId, autocall, client){
     const steps = {
       1: this.initializeDino,
       2: this.pickDino,
-      3: this.pickSkinPallete1,
-      4: this.pickSkinPallete2,
-      5: this.pickSkinPallete3,
-      6: this.pickSkinPallete4,
-      7: this.pickSkinPallete5,
-      8: this.finalize,
+      3: this.pickGender,
+      4: this.pickSkinPallete1,
+      5: this.pickSkinPallete2,
+      6: this.pickSkinPallete3,
+      7: this.pickSkinPallete4,
+      8: this.pickSkinPallete5,
+      9: this.finalize,
     }
     const dinoRequests = await GrowDinoRequest.findAll({where: {UserId: userId}, order: [['id', 'desc'],['step', 'desc']]});
 
     const lastDinoRequest = dinoRequests[0];
-    console.log(lastDinoRequest)
 
     if(lastDinoRequest === undefined){
+      logger.info(`Could not find a last dino request for user [userId=${userId}], returning to step 1`);
       return steps[1];
     }
 
-    if(lastDinoRequest.dataValues.step === 8 && lastDinoRequest.dataValues.isComplete){
+    if(lastDinoRequest.dataValues.step === 9 && lastDinoRequest.dataValues.isComplete && autocall) return;
+
+    if(lastDinoRequest.dataValues.step === 3 && lastDinoRequest.dataValues.value){
+      const pickedDino = await GrowDinoRequest.findOne({where: {step: 2, UserId: userId, isComplete: true}, order: [['id', 'desc']]});
+      const dino = dinoData[pickedDino.dataValues.value];
+      console.log(dino)
+      if (dino.isSandbox === true){
+        return steps[9];
+      }
+    }
+
+    if(lastDinoRequest.dataValues.step === 3 && lastDinoRequest.dataValues.isComplete && lastDinoRequest.dataValues.value === 'Female'){
+      return steps[5];
+    }
+
+    if(lastDinoRequest.dataValues.step === 9 && lastDinoRequest.dataValues.isComplete){
+      logger.info(`Last dino step was 9 for [userId=${userId}] and it was complete, returning to step 1`);
       return steps[1];
     }
 
-
-    console.log(lastDinoRequest.dataValues.isComplete, lastDinoRequest.dataValues.step)
     if(lastDinoRequest.dataValues.isComplete === true){
+      logger.info(`Last dino step was complete for [userId=${userId}], handing step ${lastDinoRequest.dataValues.step + 1}`)
       return steps[lastDinoRequest.dataValues.step + 1];
     } else {
+      logger.info(`Last dino step was not complete for [userId=${userId}], handing them step ${lastDinoRequest.dataValues.step}`);
       return steps[lastDinoRequest.dataValues.step];
     }
   }
@@ -49,16 +69,15 @@ module.exports = class InjectionWorkflow {
       return await this.pickDino(interaction, userId, null);
     }
 
+    const message = await interaction.channel.send(`<@${interaction.user.id}>, your grow request has initiated! Follow along the next prompts to complete your grow! You may visit back later by typing /inject.`);
     if(!existingRequest){
-      existingRequest = await new GrowDinoRequest({step: 1, isComplete: false, UserId: userId}).save();
+      existingRequest = await new GrowDinoRequest({step: 1, isComplete: false, UserId: userId, messageId: message.id}).save();
     }
-
-    await interaction.channel.send(`<@${interaction.user.id}>, your grow request has initiated! Follow along the next prompts to complete your grow! You may visit back later by typing /inject.`);
 
     return await this.initializeDino(interaction, userId, 'CreatedRequest');
   }
 
-  async pickDino(interaction, userId, value){
+  async pickDino(interaction, userId, value, client){
     let existingRequest = await GrowDinoRequest.findOne({where: {step: 2, UserId: userId, isComplete: false}});
     if(value && existingRequest){
       await GrowDinoRequest.update({isComplete: true, value,},{where: {UserId: userId, id: existingRequest.dataValues.id}});
@@ -74,15 +93,32 @@ module.exports = class InjectionWorkflow {
 		}
     const user = (await User.findOne({where: {id: userId}})).dataValues;
 		const selectOptions = dinos
-															.filter(x => x.isSandbox === true || x.requiresApex === (user.isApexApproved === 'Y'))
+															.filter(x => x.requiresApex === false || x.requiresApex === (user.isApexApproved === 'Y'))
 															.map(x => {
 																	return {
 																		label: x.displayName,
-																		description: `Apex: ${x.requiresApex}`,
+																		description: `Apex: ${x.requiresApex} | Sandbox : ${x.isSandbox}`,
 																		value: x.value
 																	}
 																}
 															);
+
+    let rows = [];
+    const split = [];
+    while (selectOptions.length > 0) {
+        const chunk = selectOptions.splice(0, 25);
+        split.push(chunk);
+    }
+    for(let i = 0; i < split.length; i++){
+      rows.push(new MessageActionRow()
+        .addComponents(
+          new MessageSelectMenu()
+            .setCustomId(`DinoInjection${i}`)
+            .setPlaceholder(`Select Dinosaur Page ${i}`)
+            .addOptions(split[i]),
+          )
+      );
+    }                           
 
     const row = new MessageActionRow()
 		.addComponents(
@@ -92,44 +128,11 @@ module.exports = class InjectionWorkflow {
 				.addOptions(selectOptions),
 		);
 		
-		await interaction.channel.send({ content: `<@${interaction.user.id}>, select your dino from the list below!`, components: [row] });
+		const message = await interaction.reply({ content: `<@${interaction.user.id}>, select your dino from the list below!`, components: [...rows], ephemeral: true, fetchReply: true});
+    await GrowDinoRequest.update({messageId: message.id}, {where: {id: existingRequest.id}});
   }
 
-  async pickSkinPallete1(interaction, userId, value){
-    let existingRequest = await GrowDinoRequest.findOne({where: {step: 3, UserId: userId, isComplete: false}});
-    if(value && existingRequest){
-      await GrowDinoRequest.update({isComplete: true, value,},{where: {UserId: userId, id: existingRequest.dataValues.id}});
-      return;
-    }
-
-    if(!existingRequest){
-      existingRequest = await new GrowDinoRequest({step: 3, isComplete: false, UserId: userId}).save();
-    }
-    const pickedDino = await GrowDinoRequest.findOne({where: {UserId: userId, step: 2}, order: [['id', 'desc']]});
-    const isHerbivore = dinoData[pickedDino.dataValues.value].diet === 'Herbivore';
-		const selectOptions = (isHerbivore ? allowedHerbivoreColors.SkinPalleteSection1.allowedValues : allowedCarnivoreColors.SkinPalleteSection1.allowedValues)
-      .map(x => {
-
-          return {
-            label: x,
-            description: `Underbelly: ${x}`,
-            value: colorMap.get(x).toString()
-          }
-        }
-      );
-
-		const row = new MessageActionRow()
-      .addComponents(
-        new MessageSelectMenu()
-          .setCustomId('DinoInjection')
-          .setPlaceholder('Select Underbelly')
-          .addOptions(selectOptions),
-      );
-		
-		await interaction.channel.send({ content: `<@${interaction.user.id}>, select your underbelly skin from the list below!`, components: [row] });
-  }
-
-  async pickSkinPallete2(interaction, userId, value){
+  async pickSkinPallete1(interaction, userId, value, client){
     let existingRequest = await GrowDinoRequest.findOne({where: {step: 4, UserId: userId, isComplete: false}});
     if(value && existingRequest){
       await GrowDinoRequest.update({isComplete: true, value,},{where: {UserId: userId, id: existingRequest.dataValues.id}});
@@ -141,7 +144,84 @@ module.exports = class InjectionWorkflow {
     }
     const pickedDino = await GrowDinoRequest.findOne({where: {UserId: userId, step: 2}, order: [['id', 'desc']]});
     const isHerbivore = dinoData[pickedDino.dataValues.value].diet === 'Herbivore';
+		const selectOptions = (isHerbivore ? allowedHerbivoreColors.SkinPalleteSection1.allowedValues : allowedCarnivoreColors.SkinPalleteSection1.allowedValues)
+      .map(x => {
+
+          return {
+            label: x,
+            description: `Detail: ${x}`,
+            value: colorMap.get(x).toString()
+          }
+        }
+      );
+
+		const row = new MessageActionRow()
+      .addComponents(
+        new MessageSelectMenu()
+          .setCustomId('DinoInjection')
+          .setPlaceholder('Select Crest Detail')
+          .addOptions(selectOptions),
+      );
+		
+		const message = await interaction.reply({ content: `<@${interaction.user.id}>, select your crest skin from the list below!`, components: [row], fetchReply: true, ephemeral: true, });
+    await GrowDinoRequest.update({messageId: message.id}, {where: {id: existingRequest.id}});
+  }
+
+  async pickSkinPallete2(interaction, userId, value, client){
+    let existingRequest = await GrowDinoRequest.findOne({where: {step: 5, UserId: userId, isComplete: false}});
+    if(value && existingRequest){
+      await GrowDinoRequest.update({isComplete: true, value,},{where: {UserId: userId, id: existingRequest.dataValues.id}});
+      return;
+    }
+
+    if(!existingRequest){
+      existingRequest = await new GrowDinoRequest({step: 5, isComplete: false, UserId: userId}).save();
+    }
+    const pickedDino = await GrowDinoRequest.findOne({where: {UserId: userId, step: 2}, order: [['id', 'desc']]});
+    const isHerbivore = dinoData[pickedDino.dataValues.value].diet === 'Herbivore';
 		const selectOptions = (isHerbivore ? allowedHerbivoreColors.SkinPalleteSection2.allowedValues : allowedCarnivoreColors.SkinPalleteSection2.allowedValues)
+      .map(x => {
+          return {
+            label: x,
+            description: `Underbelly: ${x}`,
+            value: `${colorMap.get(x)}`
+          }
+        }
+      );
+    let rows = [];
+    const split = [];
+    while (selectOptions.length > 0) {
+        const chunk = selectOptions.splice(0, 25);
+        split.push(chunk);
+    }
+    for(let i = 0; i < split.length; i++){
+      rows.push(new MessageActionRow()
+        .addComponents(
+          new MessageSelectMenu()
+            .setCustomId(`DinoInjection${i}`)
+            .setPlaceholder(`Select Underbelly Page ${i}`)
+            .addOptions(split[i]),
+          )
+      );
+    } 
+		
+		const message = await interaction.reply({ content: `<@${interaction.user.id}>, select your underbelly skin from the list below!`, components: rows, fetchReply: true, ephemeral: true,  });
+    await GrowDinoRequest.update({messageId: message.id}, {where: {id: existingRequest.id}});
+  }
+
+  async pickSkinPallete3(interaction, userId, value, client){
+    let existingRequest = await GrowDinoRequest.findOne({where: {step: 6, UserId: userId, isComplete: false}});
+    if(value && existingRequest){
+      await GrowDinoRequest.update({isComplete: true, value,},{where: {UserId: userId, id: existingRequest.dataValues.id}});
+      return;
+    }
+
+    if(!existingRequest){
+      existingRequest = await new GrowDinoRequest({step: 6, isComplete: false, UserId: userId}).save();
+    }
+    const pickedDino = await GrowDinoRequest.findOne({where: {UserId: userId, step: 2}, order: [['id', 'desc']]});
+    const isHerbivore = dinoData[pickedDino.dataValues.value].diet === 'Herbivore';
+		const selectOptions = (isHerbivore ? allowedHerbivoreColors.SkinPalleteSection3.allowedValues : allowedCarnivoreColors.SkinPalleteSection3.allowedValues)
       .map(x => {
           return {
             label: x,
@@ -161,29 +241,30 @@ module.exports = class InjectionWorkflow {
         .addComponents(
           new MessageSelectMenu()
             .setCustomId(`DinoInjection${i}`)
-            .setPlaceholder('Select Body 1')
+            .setPlaceholder(`Select Body 1 Page ${i}`)
             .addOptions(split[i]),
           )
       );
     } 
 
 		
-		await interaction.channel.send({ content: `<@${interaction.user.id}>, select your body 1 skin from the list below!`, components: rows });
+		const message = await interaction.reply({ content: 'Select your body 1 skin from the list below!', components: rows, fetchReply: true, ephemeral: true,  });
+    await GrowDinoRequest.update({messageId: message.id}, {where: {id: existingRequest.id}});
   }
 
-  async pickSkinPallete3(interaction, userId, value){
-    let existingRequest = await GrowDinoRequest.findOne({where: {step: 5, UserId: userId, isComplete: false}});
+  async pickSkinPallete4(interaction, userId, value, client){
+    let existingRequest = await GrowDinoRequest.findOne({where: {step: 7, UserId: userId, isComplete: false}});
     if(value && existingRequest){
       await GrowDinoRequest.update({isComplete: true, value,},{where: {UserId: userId, id: existingRequest.dataValues.id}});
       return;
     }
 
     if(!existingRequest){
-      existingRequest = await new GrowDinoRequest({step: 5, isComplete: false, UserId: userId}).save();
+      existingRequest = await new GrowDinoRequest({step: 7, isComplete: false, UserId: userId}).save();
     }
     const pickedDino = await GrowDinoRequest.findOne({where: {UserId: userId, step: 2}, order: [['id', 'desc']]});
     const isHerbivore = dinoData[pickedDino.dataValues.value].diet === 'Herbivore';
-		const selectOptions = (isHerbivore ? allowedHerbivoreColors.SkinPalleteSection3.allowedValues : allowedCarnivoreColors.SkinPalleteSection3.allowedValues)
+		const selectOptions = (isHerbivore ? allowedHerbivoreColors.SkinPalleteSection4.allowedValues : allowedCarnivoreColors.SkinPalleteSection4.allowedValues)
       .map(x => {
           return {
             label: x,
@@ -203,29 +284,30 @@ module.exports = class InjectionWorkflow {
         .addComponents(
           new MessageSelectMenu()
             .setCustomId(`DinoInjection${i}`)
-            .setPlaceholder('Select Body 2')
+            .setPlaceholder(`Select Body 2 Page ${i}`)
             .addOptions(split[i]),
           )
       );
     } 
 
 		
-		await interaction.channel.send({ content: 'Select your body 2 skin from the list below!', components: rows });
+		const message = await interaction.reply({ content: `<@${interaction.user.id}>, select your body 2 skin from the list below!`, components: rows, fetchReply: true, ephemeral: true,  });
+    await GrowDinoRequest.update({messageId: message.id}, {where: {id: existingRequest.id}});
   }
 
-  async pickSkinPallete4(interaction, userId, value){
-    let existingRequest = await GrowDinoRequest.findOne({where: {step: 6, UserId: userId, isComplete: false}});
+  async pickSkinPallete5(interaction, userId, value, client){
+    let existingRequest = await GrowDinoRequest.findOne({where: {step: 8, UserId: userId, isComplete: false}});
     if(value && existingRequest){
       await GrowDinoRequest.update({isComplete: true, value,},{where: {UserId: userId, id: existingRequest.dataValues.id}});
       return;
     }
 
     if(!existingRequest){
-      existingRequest = await new GrowDinoRequest({step: 6, isComplete: false, UserId: userId}).save();
+      existingRequest = await new GrowDinoRequest({step: 8, isComplete: false, UserId: userId}).save();
     }
     const pickedDino = await GrowDinoRequest.findOne({where: {UserId: userId, step: 2}, order: [['id', 'desc']]});
     const isHerbivore = dinoData[pickedDino.dataValues.value].diet === 'Herbivore';
-		const selectOptions = (isHerbivore ? allowedHerbivoreColors.SkinPalleteSection4.allowedValues : allowedCarnivoreColors.SkinPalleteSection4.allowedValues)
+		const selectOptions = (isHerbivore ? allowedHerbivoreColors.SkinPalleteSection5.allowedValues : allowedCarnivoreColors.SkinPalleteSection5.allowedValues)
       .map(x => {
           return {
             label: x,
@@ -245,60 +327,50 @@ module.exports = class InjectionWorkflow {
         .addComponents(
           new MessageSelectMenu()
             .setCustomId(`DinoInjection${i}`)
-            .setPlaceholder('Select Body 3')
+            .setPlaceholder(`Select Body 3 Page ${i}`)
             .addOptions(split[i]),
           )
       );
     } 
 
-		
-		await interaction.channel.send({ content: `<@${interaction.user.id}>, select your body 3 skin from the list below!`, components: rows });
+		const message = await interaction.reply({ content: `<@${interaction.user.id}>, select your body 3 skin from the list below!`, components: rows, fetchReply: true, ephemeral: true,  });
+    await GrowDinoRequest.update({messageId: message.id}, {where: {id: existingRequest.id}});
   }
 
-  async pickSkinPallete5(interaction, userId, value){
-    let existingRequest = await GrowDinoRequest.findOne({where: {step: 7, UserId: userId, isComplete: false}});
+  async pickGender(interaction, userId, value, client){
+    let existingRequest = await GrowDinoRequest.findOne({where: {step: 3, UserId: userId, isComplete: false}});
     if(value && existingRequest){
       await GrowDinoRequest.update({isComplete: true, value,},{where: {UserId: userId, id: existingRequest.dataValues.id}});
       return;
     }
 
     if(!existingRequest){
-      existingRequest = await new GrowDinoRequest({step: 7, isComplete: false, UserId: userId}).save();
+      existingRequest = await new GrowDinoRequest({step: 3, isComplete: false, UserId: userId}).save();
     }
-    const pickedDino = await GrowDinoRequest.findOne({where: {UserId: userId, step: 2}, order: [['id', 'desc']]});
-    const isHerbivore = dinoData[pickedDino.dataValues.value].diet === 'Herbivore';
-		const selectOptions = (isHerbivore ? allowedHerbivoreColors.SkinPalleteSection5.allowedValues : allowedCarnivoreColors.SkinPalleteSection5.allowedValues)
-      .map(x => {
-          return {
-            label: x,
-            description: `Body 4: ${x}`,
-            value: `${colorMap.get(x)}`
-          }
-        }
-      );
-    let rows = [];
-    const split = [];
-    while (selectOptions.length > 0) {
-        const chunk = selectOptions.splice(0, 25);
-        split.push(chunk);
-    }
-    for(let i = 0; i < split.length; i++){
-      rows.push(new MessageActionRow()
+
+    const row = new MessageActionRow()
         .addComponents(
           new MessageSelectMenu()
-            .setCustomId(`DinoInjection${i}`)
-            .setPlaceholder('Select Body 4')
-            .addOptions(split[i]),
-          )
-      );
-    } 
+            .setCustomId(`DinoInjection`)
+            .setPlaceholder('Select Gender')
+            .addOptions({
+              label: 'Male',
+              description: `Gender: Male`,
+              value: `Male`
+            },
+            {
+              label: 'Female',
+              description: `Gender: Female`,
+              value: `Female`
+            }),
+          );
 
-		await interaction.channel.send({ content: `<@${interaction.user.id}>, select your body 4 skin from the list below!`, components: rows });
+		const message = await interaction.reply({ content: `<@${interaction.user.id}>, select your gender from the list below!`, components: [row], fetchReply: true, ephemeral: true,  });
+    await GrowDinoRequest.update({messageId: message.id}, {where: {id: existingRequest.id}});
   }
 
-  async finalize(interaction, userId, value){
-    let existingRequest = await GrowDinoRequest.findOne({where: {step: 8, UserId: userId}, order: [['id', 'desc']]});
-    console.log(existingRequest)
+  async finalize(interaction, userId, value, client){
+    let existingRequest = await GrowDinoRequest.findOne({where: {step: 9, UserId: userId, isComplete: false}, order: [['id', 'desc']]});
     if(value && existingRequest){
       if(value === 'slay'){
 
@@ -306,12 +378,12 @@ module.exports = class InjectionWorkflow {
       if(value === 'vault'){
 
       }
-      await interaction.channel.send(`<@${interaction.user.id}> your dino has succesfully been injected! Enjoy, and let any staff know if you have any issues!`);
-      return await GrowDinoRequest.update({isComplete: true, value: value}, {where: {step: 8, UserId: userId, isComplete: false}});
+      await interaction.reply(`<@${interaction.user.id}> your dino has succesfully been injected! Enjoy, and let any staff know if you have any issues!`);
+      return await GrowDinoRequest.update({isComplete: true, value: value}, {where: {step: 9, UserId: userId, isComplete: false}});
     }
 
     if(!existingRequest){
-      existingRequest = await new GrowDinoRequest({step: 8, isComplete: false, UserId: userId}).save();
+      existingRequest = await new GrowDinoRequest({step: 9, isComplete: false, UserId: userId}).save();
     }
 
     if(existingRequest.isComplete) return;
@@ -335,7 +407,8 @@ module.exports = class InjectionWorkflow {
 					]),
 			);
 
-		await interaction.channel.send({ content: `<@${interaction.user.id}>, would you like to:`, components: [row] });
+		const message = await interaction.reply({ content: `<@${interaction.user.id}>, would you like to:`, components: [row], fetchReply: true, ephemeral: true,  });
+    await GrowDinoRequest.update({messageId: message.id}, {where: {id: existingRequest.id}});
   }
 
 }
