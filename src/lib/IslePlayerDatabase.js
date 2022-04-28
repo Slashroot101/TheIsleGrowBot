@@ -1,5 +1,7 @@
 const { resolve } = require('path');
 const { readFile, writeFile, exists } = require('fs');
+const { DinoVault, User } = require('../model');
+const uuid = require('uuid');
 
 module.exports = class IslePlayerDatabase {
 
@@ -8,7 +10,7 @@ module.exports = class IslePlayerDatabase {
 		if (!playerDatabase) {
 			throw new Error('Player database file path is required!');
 		}
-
+		this.getPlayerSave = this.getPlayerSave.bind(this);
 		this.databasePath = playerDatabase;
 	}
 
@@ -37,4 +39,22 @@ module.exports = class IslePlayerDatabase {
 			});
 		});
 	}
+
+  async vaultRandom(dino, dinoJson, userId){
+    const dinoName = `${dinoData[dino].displayName}-${uuid.v4()}`;
+    const vaultedDino = await new DinoVault({dinoDisplayName: dinoData[dino].displayName, savedName: dinoName, dinoJson: JSON.stringify(dinoJson), vaultedById: userId}).save();
+
+    return vaultedDino;
+  }
+
+  async vaultAndInject(dino, userId){
+    const user = await User.findOne({where: {id: userId}});
+    const json = await this.getPlayerSave(user.steamId);
+    console.log(user, dino, userId)
+    const vaultedDino = await this.vaultRandom(dino, json, userId);
+  }
+
+  async slayAndInject(){
+
+  }
 };

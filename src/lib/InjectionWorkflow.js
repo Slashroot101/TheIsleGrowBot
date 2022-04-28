@@ -1,10 +1,10 @@
 const {GrowDinoRequest, User} = require('../model');
 const dinoData = require('../commands/commandData/dino.json');
-const { MessageActionRow, MessageButton, MessageSelectMenu } = require('discord.js'); 
+const { MessageActionRow, MessageSelectMenu } = require('discord.js'); 
 const {allowedCarnivoreColors, allowedHerbivoreColors, colorMap} = require('./ColorMap');
-const {guildId, replyChannel} = require('../config');
 const logger = require('./logger');
-const getMessageById = require('./getMessageById');
+const {playerDatabase} = require('../config/index');
+const IslePlayerDatabase = require('../lib/IslePlayerDatabase');
 
 module.exports = class InjectionWorkflow {
   constructor(){
@@ -114,19 +114,11 @@ module.exports = class InjectionWorkflow {
         .addComponents(
           new MessageSelectMenu()
             .setCustomId(`DinoInjection${i}`)
-            .setPlaceholder(`Select Dinosaur Page ${i}`)
+            .setPlaceholder(`Select Dinosaur Page ${i + 1}/${split.length}`)
             .addOptions(split[i]),
           )
       );
     }                           
-
-    const row = new MessageActionRow()
-		.addComponents(
-			new MessageSelectMenu()
-				.setCustomId('DinoInjection')
-				.setPlaceholder('Nothing selected')
-				.addOptions(selectOptions),
-		);
 		
 		const message = await interaction.reply({ content: `<@${interaction.user.id}>, select your dino from the list below!`, components: [...rows], ephemeral: true, fetchReply: true});
     await GrowDinoRequest.update({messageId: message.id}, {where: {id: existingRequest.id}});
@@ -199,7 +191,7 @@ module.exports = class InjectionWorkflow {
         .addComponents(
           new MessageSelectMenu()
             .setCustomId(`DinoInjection${i}`)
-            .setPlaceholder(`Select Underbelly Page ${i}`)
+            .setPlaceholder(`Select Underbelly Page ${i + 1}/${split.length}`)
             .addOptions(split[i]),
           )
       );
@@ -241,7 +233,7 @@ module.exports = class InjectionWorkflow {
         .addComponents(
           new MessageSelectMenu()
             .setCustomId(`DinoInjection${i}`)
-            .setPlaceholder(`Select Body 1 Page ${i}`)
+            .setPlaceholder(`Select Body 1 Page ${i + 1}/${split.length}`)
             .addOptions(split[i]),
           )
       );
@@ -284,7 +276,7 @@ module.exports = class InjectionWorkflow {
         .addComponents(
           new MessageSelectMenu()
             .setCustomId(`DinoInjection${i}`)
-            .setPlaceholder(`Select Body 2 Page ${i}`)
+            .setPlaceholder(`Select Body 2 Page ${i + 1}/${split.length}`)
             .addOptions(split[i]),
           )
       );
@@ -327,7 +319,7 @@ module.exports = class InjectionWorkflow {
         .addComponents(
           new MessageSelectMenu()
             .setCustomId(`DinoInjection${i}`)
-            .setPlaceholder(`Select Body 3 Page ${i}`)
+            .setPlaceholder(`Select Body 3 Page ${i + 1}/${split.length}`)
             .addOptions(split[i]),
           )
       );
@@ -370,13 +362,19 @@ module.exports = class InjectionWorkflow {
   }
 
   async finalize(interaction, userId, value, client){
+    const user = await User.findOne({where: {discordId: interaction.user.id}});
+    const fileStore = new IslePlayerDatabase(playerDatabase);
+    const doesPlayerFileExist = await fileStore.doesPlayerFileExist(user.steamId);
     let existingRequest = await GrowDinoRequest.findOne({where: {step: 9, UserId: userId, isComplete: false}, order: [['id', 'desc']]});
     if(value && existingRequest){
       if(value === 'slay'){
-
+        await fileStore.slayAndInject();
       }
       if(value === 'vault'){
+        console.log(this)
 
+        const dino = await GrowDinoRequest.findOne({where: {step: 2, isComplete: true}, order: [['id', 'desc']]});
+        await fileStore.vaultAndInject(dino.dataValues.value, user.id);
       }
       await interaction.reply(`<@${interaction.user.id}> your dino has succesfully been injected! Enjoy, and let any staff know if you have any issues!`);
       return await GrowDinoRequest.update({isComplete: true, value: value}, {where: {step: 9, UserId: userId, isComplete: false}});
@@ -388,27 +386,31 @@ module.exports = class InjectionWorkflow {
 
     if(existingRequest.isComplete) return;
 
-		const row = new MessageActionRow()
-			.addComponents(
-				new MessageSelectMenu()
-					.setCustomId('DinoInjection')
-					.setPlaceholder('Nothing selected')
-					.addOptions([
-						{
-							label: 'Slay existing dino',
-							description: 'Slay',
-							value: 'slay',
-						},
-						{
-							label: 'Vault existing dino',
-							description: 'Vault existing dino to restore later',
-							value: 'restore',
-						},
-					]),
-			);
+    if(doesPlayerFileExist){
+      const row = new MessageActionRow()
+        .addComponents(
+          new MessageSelectMenu()
+            .setCustomId('DinoInjection')
+            .setPlaceholder('Nothing selected')
+            .addOptions([
+              {
+                label: 'Slay existing dino',
+                description: 'Slay',
+                value: 'slay',
+              },
+              {
+                label: 'Vault existing dino',
+                description: 'Vault existing dino to restore later',
+                value: 'vault',
+              },
+            ]),
+        );
 
-		const message = await interaction.reply({ content: `<@${interaction.user.id}>, would you like to:`, components: [row], fetchReply: true, ephemeral: true,  });
-    await GrowDinoRequest.update({messageId: message.id}, {where: {id: existingRequest.id}});
+      const message = await interaction.reply({ content: `<@${interaction.user.id}>, would you like to:`, components: [row], fetchReply: true, ephemeral: true,  });
+      return await GrowDinoRequest.update({messageId: message.id}, {where: {id: existingRequest.id}});
+    }
+
+    await interaction.reply({content: `<@${interaction.user.id}>, your dino has been injected!`, ephemeral: true});
+    await GrowDinoRequest.update({isComplete: true, value: 'Non-Existing'}, {where: {step: 9, UserId: userId, isComplete: false}});
   }
-
 }
