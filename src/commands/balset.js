@@ -2,13 +2,14 @@ const { SlashCommandBuilder } = require('@discordjs/builders');
 const logger = require('../lib/logger');
 const { User } = require('../model');
 const UserBank = require('../model/UserBank');
+const {currencyName} = require('../config');
 
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('grant')
-    .addMentionableOption(x => x.setName('user').setDescription('The user to grant the fossils to'))
+    .addMentionableOption(x => x.setName('user').setDescription(`The user to grant the ${currencyName} to`))
     .addIntegerOption(x => x.setName('amount').setDescription('The amount to grant'))
-		.setDescription('Replies with your fossil balance!'),
+		.setDescription(`Replies with your ${currencyName} balance!`),
 	adminRequired: true,
 	cooldown: {
 		hasCooldown: true,
@@ -31,6 +32,6 @@ module.exports = {
 			logger.info(`User bank [userId=${mentionedUser}] was incremeneted by admin user [userId=${interaction.user.id}]`);
       bank = await UserBank.update({balance: bank.balance + amount}, {where: {UserId: user.id}});
     }
-		interaction.reply(`Succesfully granted ${bank.balance == null ? 0 : bank.balance} fossils!`);
+		interaction.reply(`Succesfully granted ${bank.balance == null ? 0 : bank.balance} ${currencyName}!`);
 	},
 };

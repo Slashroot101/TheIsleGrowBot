@@ -1,4 +1,5 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
+const { currencyName } = require('../config');
 const logger = require('../lib/logger');
 const { User } = require('../model');
 const UserBank = require('../model/UserBank');
@@ -20,6 +21,6 @@ module.exports = {
 			logger.info(`User [userId=${interaction.user.id}] tried to run ${interaction.commandName} but did not have a user bank. Creating`);
 			bank = await new UserBank({ UserId: user.id, balance: 0 }).save();
 		}
-		interaction.reply(`You have ${bank.balance == null ? 0 : bank.balance} fossils!`);
+		interaction.reply(`You have ${bank.balance == null ? 0 : bank.balance} ${currencyName}!`);
 	},
 };

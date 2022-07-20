@@ -1,6 +1,6 @@
 const fs = require('fs');
 const { Client, Intents, Collection } = require('discord.js');
-const { token, natsUrl, stripeWebhook, syncDb } = require('./config');
+const { token, natsUrl, stripeWebhook, syncDb, botName } = require('./config');
 const { initializeCommands } = require('./deploy-commands');
 const client = new Client({ intents: [Intents.FLAGS.GUILDS] });
 const path = require('path');
@@ -36,7 +36,7 @@ const InjectionWorkflow = require('./lib/InjectionWorkflow');
 	client.once('ready', async () => {
 		await deployRoles(client);
 		await queueSubscriptions(nats, client);
-		logger.info(`Bot ready!`);
+		logger.info(`${botName} ready!`);
 	});
 
 	client.on('interactionCreate', async interaction => {

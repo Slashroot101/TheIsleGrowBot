@@ -2,10 +2,12 @@ const { SlashCommandBuilder } = require('@discordjs/builders');
 const { User } = require('../model');
 const { oauthUrl, host, port } = require('../config');
 const logger = require('../lib/logger');
+const {botName} = require('../config');
+
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('linksteam')
-		.setDescription('Links your steam account to fossil bot.'),
+		.setDescription(`Links your steam account to ${botName}.`),
 	adminRequired: false,
 	cooldown: {
 		hasCooldown: true,

@@ -1,5 +1,5 @@
 const seedData = require('./seedData/roles.json');
-const { guildId } = require('./config');
+const { guildId, botName } = require('./config');
 const logger = require('./lib/logger');
 
 exports.deployRoles = async (client) => {
@@ -19,7 +19,7 @@ exports.deployRoles = async (client) => {
 		const createdRole = await guild.roles.create({
 			name: role.name,
 			color: role.color,
-			reason: 'Fossil bot required roles!',
+			reason: `${botName} required roles!`,
 		});
 		this.instanceRoles.set(role.code, { id: createdRole.id });
 	}

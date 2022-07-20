@@ -23,4 +23,6 @@ module.exports = {
 	stripeWebhook: process.env.STRIPE_WEBHOOK,
 	scrapeInterval: process.env.SCRAPE_INTERVAL,
 	maxApex: process.env.MAX_APEX,
+	currencyName: process.env.CURRENCY_NAME,
+	botName: process.env.BOT_NAME,
 };
