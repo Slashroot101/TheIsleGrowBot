@@ -1,0 +1,40 @@
+services:
+    nats:
+      image: 'nats:0.8.0'
+      entrypoint: "/gnatsd -DV"
+      expose:
+        - "4222"
+      ports:
+        - "8222:8222"
+      hostname: nats-server
+    bot:
+        image: bot
+        build: 
+          context: .
+          dockerfile: ./docker/bot/Dockerfile
+        command: bash -c "rm -rf /usr/local/app/node_modules/* && npm run prod"
+        links:
+          - nats
+          - db
+        depends_on:
+          - nats
+          - db
+        volumes:
+            - ./:/usr/local/app/
+            # the volume above prevents our host system's node_modules to be mounted
+            - exclude:/usr/local/app/node_modules/
+    db:
+      image: postgres:14.1-alpine
+      restart: always
+      env_file:
+        - .dev.env
+      ports:
+        - '5432:5432'
+      volumes: 
+        - db:/var/lib/postgresql/data
+
+volumes:
+    exclude:
+
+    db:
+      driver: local

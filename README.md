@@ -14,10 +14,10 @@ The following requirements are needed to run this bot:
 Once you have these dependencies setup, you will need to create a .prod.env file at the root level with the following values:
 
 ```
-DB_NAME= postgres database name
-DB_USERNAME= postgres username
-DB_PASSWORD= postgres password
-DB_HOST= postgres db host name
+POSTGRES_DB=fossil
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=postgres
+DB_HOST=db
 SALT= 10
 SECRET= stripe secret
 CLIENTSECRET= discord client secret

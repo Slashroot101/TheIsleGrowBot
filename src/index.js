@@ -1,6 +1,6 @@
 const fs = require('fs');
 const { Client, Intents, Collection } = require('discord.js');
-const { token, natsUrl, stripeWebhook, syncDb, botName } = require('./config');
+const { token, natsUrl, stripeWebhook, dbName, botName, forceDbReset } = require('./config');
 const { initializeCommands } = require('./deploy-commands');
 const client = new Client({ intents: [Intents.FLAGS.GUILDS] });
 const path = require('path');
@@ -18,7 +18,7 @@ const {initColorMap} = require('./lib/ColorMap');
 const InjectionWorkflow = require('./lib/InjectionWorkflow');
 (async () => {
 	const nats = await connect({
-		url: natsUrl,
+		servers: natsUrl,
 	});
 
 	Object.keys(Models).forEach((ele) => {
@@ -28,7 +28,7 @@ const InjectionWorkflow = require('./lib/InjectionWorkflow');
 	initColorMap();
 	logger.info(`Color map complete`);
 	logger.info(`Creating database connection`);
-	await database.dbConnection.sync({ force: false });
+	await database.dbConnection.sync({ force: forceDbReset === 'true' });
 	logger.info(`Finished creating database connection`);
 	await initializeCommands();
 	await createWebhooks(`${stripeWebhook}/donate`);

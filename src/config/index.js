@@ -3,9 +3,10 @@ const dotenv = require('dotenv');
 dotenv.config({ path: `${process.cwd()}/.${process.env.NODE_ENV.replace(' ', '')}.env` });
 
 module.exports = {
-	dbName: process.env.DB_NAME,
-	dbUsername: process.env.DB_USERNAME,
-	dbPassword: process.env.DB_PASSWORD,
+	forceDbReset: process.env.FORCE_DB_RESET,
+	dbName: process.env.POSTGRES_DB,
+	dbUsername: process.env.POSTGRES_USER,
+	dbPassword: process.env.POSTGRES_PASSWORD,
 	dbHost: process.env.DB_HOST,
 	token: process.env.TOKEN,
 	clientId: process.env.CLIENTID,
@@ -15,10 +16,9 @@ module.exports = {
 	port: process.env.PORT,
 	oauthUrl: process.env.OAUTHURL,
 	clientSecret: process.env.CLIENTSECRET,
-	natsUrl: process.env.natsUrl,
+	natsUrl: process.env.NATSURL,
 	replyChannel: process.env.REPLY_CHANNEL,
 	host: process.env.HOST,
-	syncDb: process.env.SYNC_DB,
 	stripeSecret: process.env.STRIPE_SECRET,
 	stripeWebhook: process.env.STRIPE_WEBHOOK,
 	scrapeInterval: process.env.SCRAPE_INTERVAL,

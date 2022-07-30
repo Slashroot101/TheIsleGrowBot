@@ -6,6 +6,7 @@
   "scripts": {
     "scraper": "cross-env NODE_ENV=dev node src/scraper/index.js | pino-pretty -i pid,hostname -t yyyy-mm-dd HH:MM:ss",
     "start": "cross-env NODE_ENV=dev node src/index.js | pino-pretty -i pid,hostname -t yyyy-mm-dd HH:MM:ss",
+    "prod": "node src/index.js | pino-pretty -i pid,hostname -t yyyy-mm-dd HH:MM:ss",
     "dev": "cross-env NODE_ENV=dev node src/index.js | pino-pretty -i pid,hostname -t yyyy-mm-dd HH:MM:ss",
     "api": "cross-env NODE_ENV=dev node src/api/index.js | pino-pretty -i pid,hostname -t yyyy-mm-dd HH:MM:ss",
     "register-dev": "cross-env NODE_ENV=dev node src/deploy-commands.js"
@@ -30,6 +31,7 @@
     "node-fetch": "^2.6.7",
     "pg": "^8.7.3",
     "pino": "^7.0.0-rc.9",
+    "pino-pretty": "^8.1.0",
     "sequelize": "^6.15.0",
     "stripe": "^8.214.0",
     "uuid": "^8.3.2"
